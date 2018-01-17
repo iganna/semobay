@@ -1,0 +1,64 @@
+TRAF6 ~ c(a1_1, a1_2)*NGFR
+d1 := a1_1 - a1_2
+RAC1 ~ c(a2_1, a2_2)*NGFR
+d2 := a2_1 - a2_2
+MAP3K1 ~ c(a3_1, a3_2)*RAC1
+d3 := a3_1 - a3_2
+MAP2K7 ~ c(a4_1, a4_2)*MAP3K1
+d4 := a4_1 - a4_2
+MAP9 ~ c(a5_1, a5_2)*MAP2K7
+d5 := a5_1 - a5_2
+MAP9 ~ c(a6_1, a6_2)*TRAF6
+d6 := a6_1 - a6_2
+TP53 ~ c(a7_1, a7_2)*MAP9
+d7 := a7_1 - a7_2
+TP53 ~ c(a8_1, a8_2)*TP73
+d8 := a8_1 - a8_2
+JUN ~ c(a9_1, a9_2)*MAP9
+d9 := a9_1 - a9_2
+NGFR ~~ 0*TP73
+NGFR ~ c(a01_1, a01_1)*Sex
+NGFR ~ c(a01_2, a01_2)*Age
+NGFR ~ c(a01_3, a01_3)*Pca1
+NGFR ~ c(a01_4, a01_4)*Pca2
+NGFR ~ c(a01_5, a01_5)*batch
+TRAF6 ~ c(a02_1, a02_1)*Sex
+TRAF6 ~ c(a02_2, a02_2)*Age
+TRAF6 ~ c(a02_3, a02_3)*Pca1
+TRAF6 ~ c(a02_4, a02_4)*Pca2
+TRAF6 ~ c(a02_5, a02_5)*batch
+RAC1 ~ c(a03_1, a03_1)*Sex
+RAC1 ~ c(a03_2, a03_2)*Age
+RAC1 ~ c(a03_3, a03_3)*Pca1
+RAC1 ~ c(a03_4, a03_4)*Pca2
+RAC1 ~ c(a03_5, a03_5)*batch
+MAP3K1 ~ c(a04_1, a04_1)*Sex
+MAP3K1 ~ c(a04_2, a04_2)*Age
+MAP3K1 ~ c(a04_3, a04_3)*Pca1
+MAP3K1 ~ c(a04_4, a04_4)*Pca2
+MAP3K1 ~ c(a04_5, a04_5)*batch
+MAP2K7 ~ c(a05_1, a05_1)*Sex
+MAP2K7 ~ c(a05_2, a05_2)*Age
+MAP2K7 ~ c(a05_3, a05_3)*Pca1
+MAP2K7 ~ c(a05_4, a05_4)*Pca2
+MAP2K7 ~ c(a05_5, a05_5)*batch
+MAP9 ~ c(a06_1, a06_1)*Sex
+MAP9 ~ c(a06_2, a06_2)*Age
+MAP9 ~ c(a06_3, a06_3)*Pca1
+MAP9 ~ c(a06_4, a06_4)*Pca2
+MAP9 ~ c(a06_5, a06_5)*batch
+TP73 ~ c(a07_1, a07_1)*Sex
+TP73 ~ c(a07_2, a07_2)*Age
+TP73 ~ c(a07_3, a07_3)*Pca1
+TP73 ~ c(a07_4, a07_4)*Pca2
+TP73 ~ c(a07_5, a07_5)*batch
+TP53 ~ c(a08_1, a08_1)*Sex
+TP53 ~ c(a08_2, a08_2)*Age
+TP53 ~ c(a08_3, a08_3)*Pca1
+TP53 ~ c(a08_4, a08_4)*Pca2
+TP53 ~ c(a08_5, a08_5)*batch
+JUN ~ c(a09_1, a09_1)*Sex
+JUN ~ c(a09_2, a09_2)*Age
+JUN ~ c(a09_3, a09_3)*Pca1
+JUN ~ c(a09_4, a09_4)*Pca2
+JUN ~ c(a09_5, a09_5)*batch

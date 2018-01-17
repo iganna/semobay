@@ -1,0 +1,33 @@
+PSAT1 ~ c(a1_1, a1_2)*PHGDH
+d1 := a1_1 - a1_2
+PSPH ~ c(a2_1, a2_2)*PSAT1
+d2 := a2_1 - a2_2
+SHMT1 ~ c(a3_1, a3_2)*PSPH
+d3 := a3_1 - a3_2
+SHMT2 ~ c(a4_1, a4_2)*PSPH
+d4 := a4_1 - a4_2
+PHGDH ~ c(a01_1, a01_1)*Sex
+PHGDH ~ c(a01_2, a01_2)*Age
+PHGDH ~ c(a01_3, a01_3)*Pca1
+PHGDH ~ c(a01_4, a01_4)*Pca2
+PHGDH ~ c(a01_5, a01_5)*batch
+PSAT1 ~ c(a02_1, a02_1)*Sex
+PSAT1 ~ c(a02_2, a02_2)*Age
+PSAT1 ~ c(a02_3, a02_3)*Pca1
+PSAT1 ~ c(a02_4, a02_4)*Pca2
+PSAT1 ~ c(a02_5, a02_5)*batch
+PSPH ~ c(a03_1, a03_1)*Sex
+PSPH ~ c(a03_2, a03_2)*Age
+PSPH ~ c(a03_3, a03_3)*Pca1
+PSPH ~ c(a03_4, a03_4)*Pca2
+PSPH ~ c(a03_5, a03_5)*batch
+SHMT1 ~ c(a04_1, a04_1)*Sex
+SHMT1 ~ c(a04_2, a04_2)*Age
+SHMT1 ~ c(a04_3, a04_3)*Pca1
+SHMT1 ~ c(a04_4, a04_4)*Pca2
+SHMT1 ~ c(a04_5, a04_5)*batch
+SHMT2 ~ c(a05_1, a05_1)*Sex
+SHMT2 ~ c(a05_2, a05_2)*Age
+SHMT2 ~ c(a05_3, a05_3)*Pca1
+SHMT2 ~ c(a05_4, a05_4)*Pca2
+SHMT2 ~ c(a05_5, a05_5)*batch

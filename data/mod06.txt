@@ -1,0 +1,16 @@
+# measurement part
+eta1 =~ y1 + y2
+eta2 =~ y3 + y4
+eta3 =~ y5 + y6 + y7
+eta4 =~ y8 + y9
+
+# structural part
+x1 ~ eta1
+x2 ~ x1
+eta2 ~ x1
+eta3 ~ eta2
+x3 ~ eta3 
+eta4 ~ eta3
+x4 ~ eta4
+eta2 ~ x4 
+

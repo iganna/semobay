@@ -1,0 +1,5 @@
+eta1 =~ y1 + y2
+
+eta2 =~ y3 + y4
+
+x3 ~ eta1 + eta2

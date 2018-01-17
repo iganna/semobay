@@ -1,0 +1,94 @@
+KRAS ~ c(a1_1, a1_2)*SOS2
+d1 := a1_1 - a1_2
+KRAS ~ c(a2_1, a2_2)*RASA2
+d2 := a2_1 - a2_2
+KRAS ~ c(a3_1, a3_2)*NF1
+d3 := a3_1 - a3_2
+KRAS ~ c(a4_1, a4_2)*RAPGEF2
+d4 := a4_1 - a4_2
+KRAS ~ c(a5_1, a5_2)*PRKCB
+d5 := a5_1 - a5_2
+RAF1 ~ c(a6_1, a6_2)*PRKCB
+d6 := a6_1 - a6_2
+RAF1 ~ c(a7_1, a7_2)*KRAS
+d7 := a7_1 - a7_2
+MAP2K2 ~ c(a8_1, a8_2)*RAF1
+d8 := a8_1 - a8_2
+MAPK3 ~ c(a9_1, a9_2)*MAP2K2
+d9 := a9_1 - a9_2
+RAF1 ~ c(a10_1, a10_2)*MAPK3
+d10 := a10_1 - a10_2
+BRAF ~ c(a11_1, a11_2)*RAP1A
+d11 := a11_1 - a11_2
+MAP2K2 ~ c(a12_1, a12_2)*BRAF
+d12 := a12_1 - a12_2
+SOS2 ~~ 0*RASA2
+SOS2 ~~ 0*NF1
+SOS2 ~~ 0*RAPGEF2
+SOS2 ~~ 0*PRKCB
+SOS2 ~~ 0*RAP1A
+RASA2 ~~ 0*NF1
+RASA2 ~~ 0*RAPGEF2
+RASA2 ~~ 0*PRKCB
+RASA2 ~~ 0*RAP1A
+NF1 ~~ 0*RAPGEF2
+NF1 ~~ 0*PRKCB
+NF1 ~~ 0*RAP1A
+RAPGEF2 ~~ 0*PRKCB
+RAPGEF2 ~~ 0*RAP1A
+PRKCB ~~ 0*RAP1A
+SOS2 ~ c(a01_1, a01_1)*Sex
+SOS2 ~ c(a01_2, a01_2)*Age
+SOS2 ~ c(a01_3, a01_3)*Pca1
+SOS2 ~ c(a01_4, a01_4)*Pca2
+SOS2 ~ c(a01_5, a01_5)*batch
+KRAS ~ c(a02_1, a02_1)*Sex
+KRAS ~ c(a02_2, a02_2)*Age
+KRAS ~ c(a02_3, a02_3)*Pca1
+KRAS ~ c(a02_4, a02_4)*Pca2
+KRAS ~ c(a02_5, a02_5)*batch
+RASA2 ~ c(a03_1, a03_1)*Sex
+RASA2 ~ c(a03_2, a03_2)*Age
+RASA2 ~ c(a03_3, a03_3)*Pca1
+RASA2 ~ c(a03_4, a03_4)*Pca2
+RASA2 ~ c(a03_5, a03_5)*batch
+NF1 ~ c(a04_1, a04_1)*Sex
+NF1 ~ c(a04_2, a04_2)*Age
+NF1 ~ c(a04_3, a04_3)*Pca1
+NF1 ~ c(a04_4, a04_4)*Pca2
+NF1 ~ c(a04_5, a04_5)*batch
+RAPGEF2 ~ c(a05_1, a05_1)*Sex
+RAPGEF2 ~ c(a05_2, a05_2)*Age
+RAPGEF2 ~ c(a05_3, a05_3)*Pca1
+RAPGEF2 ~ c(a05_4, a05_4)*Pca2
+RAPGEF2 ~ c(a05_5, a05_5)*batch
+PRKCB ~ c(a06_1, a06_1)*Sex
+PRKCB ~ c(a06_2, a06_2)*Age
+PRKCB ~ c(a06_3, a06_3)*Pca1
+PRKCB ~ c(a06_4, a06_4)*Pca2
+PRKCB ~ c(a06_5, a06_5)*batch
+RAF1 ~ c(a07_1, a07_1)*Sex
+RAF1 ~ c(a07_2, a07_2)*Age
+RAF1 ~ c(a07_3, a07_3)*Pca1
+RAF1 ~ c(a07_4, a07_4)*Pca2
+RAF1 ~ c(a07_5, a07_5)*batch
+BRAF ~ c(a08_1, a08_1)*Sex
+BRAF ~ c(a08_2, a08_2)*Age
+BRAF ~ c(a08_3, a08_3)*Pca1
+BRAF ~ c(a08_4, a08_4)*Pca2
+BRAF ~ c(a08_5, a08_5)*batch
+MAP2K2 ~ c(a09_1, a09_1)*Sex
+MAP2K2 ~ c(a09_2, a09_2)*Age
+MAP2K2 ~ c(a09_3, a09_3)*Pca1
+MAP2K2 ~ c(a09_4, a09_4)*Pca2
+MAP2K2 ~ c(a09_5, a09_5)*batch
+MAPK3 ~ c(a010_1, a010_1)*Sex
+MAPK3 ~ c(a010_2, a010_2)*Age
+MAPK3 ~ c(a010_3, a010_3)*Pca1
+MAPK3 ~ c(a010_4, a010_4)*Pca2
+MAPK3 ~ c(a010_5, a010_5)*batch
+RAP1A ~ c(a011_1, a011_1)*Sex
+RAP1A ~ c(a011_2, a011_2)*Age
+RAP1A ~ c(a011_3, a011_3)*Pca1
+RAP1A ~ c(a011_4, a011_4)*Pca2
+RAP1A ~ c(a011_5, a011_5)*batch

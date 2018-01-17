@@ -1,0 +1,16 @@
+eta1 =~ y1 + y2
+
+eta2 =~ y3 + y4
+
+eta3 =~ y5 + y6
+
+eta4 =~ y7 + y8
+
+
+x3 ~ eta1 + eta2
+
+x4 ~ x1 + x2
+
+eta3 ~ eta2 + x1
+
+eta4 ~ x2 + eta1

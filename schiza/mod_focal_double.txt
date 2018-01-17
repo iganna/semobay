@@ -1,0 +1,80 @@
+BCAR1 ~ c(a1_1, a1_2)*PTK2
+d1 := a1_1 - a1_2
+PIK3CD ~ c(a2_1, a2_2)*PTK2
+d2 := a2_1 - a2_2
+CRK ~ c(a3_1, a3_2)*BCAR1
+d3 := a3_1 - a3_2
+DOCK1 ~ c(a4_1, a4_2)*CRK
+d4 := a4_1 - a4_2
+VAV2 ~ c(a5_1, a5_2)*PIK3CD
+d5 := a5_1 - a5_2
+VAV2 ~ c(a6_1, a6_2)*PTEN
+d6 := a6_1 - a6_2
+PIK3CD ~ c(a7_1, a7_2)*PTEN
+d7 := a7_1 - a7_2
+RAC3 ~ c(a8_1, a8_2)*VAV2
+d8 := a8_1 - a8_2
+RAC3 ~ c(a9_1, a9_2)*DOCK1
+d9 := a9_1 - a9_2
+PAK2 ~ c(a10_1, a10_2)*RAC3
+d10 := a10_1 - a10_2
+RAPGEF1 ~ c(a11_1, a11_2)*CRK
+d11 := a11_1 - a11_2
+RAP1A ~ c(a12_1, a12_2)*RAPGEF1
+d12 := a12_1 - a12_2
+PTK2 ~~ 0*PTEN
+PTK2 ~ c(a01_1, a01_1)*Sex
+PTK2 ~ c(a01_2, a01_2)*Age
+PTK2 ~ c(a01_3, a01_3)*Pca1
+PTK2 ~ c(a01_4, a01_4)*Pca2
+PTK2 ~ c(a01_5, a01_5)*batch
+BCAR1 ~ c(a02_1, a02_1)*Sex
+BCAR1 ~ c(a02_2, a02_2)*Age
+BCAR1 ~ c(a02_3, a02_3)*Pca1
+BCAR1 ~ c(a02_4, a02_4)*Pca2
+BCAR1 ~ c(a02_5, a02_5)*batch
+CRK ~ c(a03_1, a03_1)*Sex
+CRK ~ c(a03_2, a03_2)*Age
+CRK ~ c(a03_3, a03_3)*Pca1
+CRK ~ c(a03_4, a03_4)*Pca2
+CRK ~ c(a03_5, a03_5)*batch
+DOCK1 ~ c(a04_1, a04_1)*Sex
+DOCK1 ~ c(a04_2, a04_2)*Age
+DOCK1 ~ c(a04_3, a04_3)*Pca1
+DOCK1 ~ c(a04_4, a04_4)*Pca2
+DOCK1 ~ c(a04_5, a04_5)*batch
+PIK3CD ~ c(a05_1, a05_1)*Sex
+PIK3CD ~ c(a05_2, a05_2)*Age
+PIK3CD ~ c(a05_3, a05_3)*Pca1
+PIK3CD ~ c(a05_4, a05_4)*Pca2
+PIK3CD ~ c(a05_5, a05_5)*batch
+VAV2 ~ c(a06_1, a06_1)*Sex
+VAV2 ~ c(a06_2, a06_2)*Age
+VAV2 ~ c(a06_3, a06_3)*Pca1
+VAV2 ~ c(a06_4, a06_4)*Pca2
+VAV2 ~ c(a06_5, a06_5)*batch
+RAC3 ~ c(a07_1, a07_1)*Sex
+RAC3 ~ c(a07_2, a07_2)*Age
+RAC3 ~ c(a07_3, a07_3)*Pca1
+RAC3 ~ c(a07_4, a07_4)*Pca2
+RAC3 ~ c(a07_5, a07_5)*batch
+PAK2 ~ c(a08_1, a08_1)*Sex
+PAK2 ~ c(a08_2, a08_2)*Age
+PAK2 ~ c(a08_3, a08_3)*Pca1
+PAK2 ~ c(a08_4, a08_4)*Pca2
+PAK2 ~ c(a08_5, a08_5)*batch
+RAPGEF1 ~ c(a09_1, a09_1)*Sex
+RAPGEF1 ~ c(a09_2, a09_2)*Age
+RAPGEF1 ~ c(a09_3, a09_3)*Pca1
+RAPGEF1 ~ c(a09_4, a09_4)*Pca2
+RAPGEF1 ~ c(a09_5, a09_5)*batch
+RAP1A ~ c(a010_1, a010_1)*Sex
+RAP1A ~ c(a010_2, a010_2)*Age
+RAP1A ~ c(a010_3, a010_3)*Pca1
+RAP1A ~ c(a010_4, a010_4)*Pca2
+RAP1A ~ c(a010_5, a010_5)*batch
+PTEN ~ c(a011_1, a011_1)*Sex
+PTEN ~ c(a011_2, a011_2)*Age
+PTEN ~ c(a011_3, a011_3)*Pca1
+PTEN ~ c(a011_4, a011_4)*Pca2
+PTEN ~ c(a011_5, a011_5)*batch
