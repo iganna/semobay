@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="455148aa-4016-4d6c-841b-6804d55e9d94" name="Default" comment="" />
+    <list default="true" id="455148aa-4016-4d6c-841b-6804d55e9d94" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/schiza/mod_akt_single_cut_after_anna_newMLN.txt" afterPath="$PROJECT_DIR$/schiza/mod_akt_single_cut_after_anna_newMLN.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/schiza/mod_akt_single_cut_after_anna_newULS.txt" afterPath="$PROJECT_DIR$/schiza/mod_akt_single_cut_after_anna_newULS.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/schiza/mod_akt_single_cut_before_anna.txt" afterPath="$PROJECT_DIR$/schiza/mod_akt_single_cut_before_anna.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/semopy_inspector.py" afterPath="$PROJECT_DIR$/semopy_inspector.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/semopy_model.py" afterPath="$PROJECT_DIR$/semopy_model.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/semopy_optimiser.py" afterPath="$PROJECT_DIR$/semopy_optimiser.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,35 +20,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="29" lean-forward="false" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+            <state relative-caret-position="300">
+              <caret line="20" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="47" selection-end-column="13" />
               <folding>
                 <element signature="e#1#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="semopy_stat.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/semopy_stat.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="45" lean-forward="false" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="semopy_inspector.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/semopy_inspector.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="35" column="18" lean-forward="false" selection-start-line="35" selection-start-column="15" selection-end-line="35" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#54#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -48,10 +35,22 @@
       <file leaf-file-name="semopy_optimiser.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/semopy_optimiser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+            <state relative-caret-position="280">
+              <caret line="306" column="42" lean-forward="false" selection-start-line="306" selection-start-column="42" selection-end-line="306" selection-end-column="42" />
               <folding>
                 <element signature="e#0#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="semopy_inspector.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/semopy_inspector.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="608">
+              <caret line="51" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#54#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -60,8 +59,8 @@
       <file leaf-file-name="semopy_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/semopy_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="311" column="50" lean-forward="false" selection-start-line="311" selection-start-column="50" selection-end-line="311" selection-end-column="50" />
+            <state relative-caret-position="1690">
+              <caret line="309" column="47" lean-forward="false" selection-start-line="309" selection-start-column="47" selection-end-line="309" selection-end-column="47" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <element signature="e#2789#4768#0" expanded="false" />
@@ -69,9 +68,9 @@
                 <element signature="e#5728#6931#0" expanded="false" />
                 <element signature="e#6966#7793#0" expanded="false" />
                 <element signature="e#7826#9895#0" expanded="false" />
-                <element signature="e#10935#11228#0" expanded="false" />
-                <element signature="e#11287#11769#0" expanded="false" />
-                <element signature="e#11830#15365#0" expanded="false" />
+                <element signature="e#10984#11277#0" expanded="false" />
+                <element signature="e#11336#11818#0" expanded="false" />
+                <element signature="e#11879#15414#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -113,6 +112,7 @@
       <find>sum(len(mt[1])</find>
       <find>self.params</find>
       <find>self.param_val[i]</find>
+      <find>ValueError</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -130,12 +130,12 @@
         <option value="$PROJECT_DIR$/SEMInspector.py" />
         <option value="$PROJECT_DIR$/sem_model.py" />
         <option value="$PROJECT_DIR$/sem_optimiser.py" />
-        <option value="$PROJECT_DIR$/semopy_model.py" />
         <option value="$PROJECT_DIR$/semopy_ml_loss.py" />
-        <option value="$PROJECT_DIR$/semopy_optimiser.py" />
         <option value="$PROJECT_DIR$/semopy_stat.py" />
+        <option value="$PROJECT_DIR$/semopy_model.py" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/semopy_inspector.py" />
+        <option value="$PROJECT_DIR$/semopy_optimiser.py" />
       </list>
     </option>
   </component>
@@ -205,8 +205,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12638889" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12638889" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -419,34 +420,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/semopy_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="311" column="50" lean-forward="false" selection-start-line="311" selection-start-column="50" selection-end-line="311" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#2789#4768#0" expanded="false" />
-            <element signature="e#5121#5692#0" expanded="false" />
-            <element signature="e#5728#6931#0" expanded="false" />
-            <element signature="e#6966#7793#0" expanded="false" />
-            <element signature="e#7826#9895#0" expanded="false" />
-            <element signature="e#10935#11228#0" expanded="false" />
-            <element signature="e#11287#11769#0" expanded="false" />
-            <element signature="e#11830#15365#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/semopy_optimiser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/semopy_stat.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -455,22 +428,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/semopy_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="29" lean-forward="false" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+        <state relative-caret-position="1690">
+          <caret line="309" column="47" lean-forward="false" selection-start-line="309" selection-start-column="47" selection-end-line="309" selection-end-column="47" />
           <folding>
-            <element signature="e#1#43#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#2789#4768#0" expanded="false" />
+            <element signature="e#5121#5692#0" expanded="false" />
+            <element signature="e#5728#6931#0" expanded="false" />
+            <element signature="e#6966#7793#0" expanded="false" />
+            <element signature="e#7826#9895#0" expanded="false" />
+            <element signature="e#10984#11277#0" expanded="false" />
+            <element signature="e#11336#11818#0" expanded="false" />
+            <element signature="e#11879#15414#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/semopy_inspector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="18" lean-forward="false" selection-start-line="35" selection-start-column="15" selection-end-line="35" selection-end-column="18" />
+        <state relative-caret-position="608">
+          <caret line="51" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/semopy_optimiser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="306" column="42" lean-forward="false" selection-start-line="306" selection-start-column="42" selection-end-line="306" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="47" selection-end-column="13" />
+          <folding>
+            <element signature="e#1#43#0" expanded="true" />
           </folding>
         </state>
       </provider>

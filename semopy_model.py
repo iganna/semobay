@@ -307,6 +307,7 @@ class SEMModel:
         # TODO LEN of parameters
         if params is not None:
             if len(params) != self.n_param:
+                print(len(params), self.n_param)
                 raise ValueError('Length of parameters is not valid')
             if not all(isinstance(p, (int, float)) for p in params):
                 raise ValueError('Invalid values')

@@ -33,6 +33,9 @@ def inspect(sem: SEMModel, sem_optimiser: SEMOptimiser,  output=stdout):
     print('Endogenous variables:', v_endo, file=output)
     print('Exogenous variables:', v_exo, file=output)
 
+    if sem_optimiser.estimator == 'MLSkewed':
+        print('Skewness ', sem_optimiser.add_params, file=output)
+
     matrices = sem.get_matrices(sem_optimiser.params)
     print_matrix('Beta', matrices['Beta'], v_spart, v_spart, output)
     print_matrix('Lambda', matrices['Lambda'], v_spart, v_mpart, output)

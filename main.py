@@ -9,7 +9,8 @@ from scipy.optimize import minimize
 # estimator = 'MLW'
 # estimator = 'MLN'  # ANNA: This method is toooooooo time-consuming now
 # estimator = 'GLS'
-estimator = 'ULS'
+# estimator = 'ULS'
+estimator = 'MLSkewed'
 
 
 

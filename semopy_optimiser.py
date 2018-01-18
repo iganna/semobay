@@ -2,13 +2,13 @@ from semopy_model import SEMData, SEMModel
 import numpy as np
 from scipy.optimize import minimize
 from functools import partial
-from scipy.stats import multivariate_normal
+from scipy.stats import multivariate_normal, norm
 import random
 
 
 class SEMOptimiser:
 
-    def __init__(self, mod: SEMModel, data: SEMData, estimator, regularizator = None):
+    def __init__(self, mod: SEMModel, data: SEMData, estimator, regularizator=None):
         """
         Initialisation of the optimiser
         :param mod:
@@ -24,7 +24,11 @@ class SEMOptimiser:
 
         self.m_profiles = data.m_profiles
         self.m_cov = data.m_cov  # Covariance matrix
-        self.loss_func = partial(self.get_loss_function(estimator), self)
+
+        # Loss-functional and its additional parameters
+        self.loss_func, self.add_params = self.get_loss_function(estimator)
+        self.loss_func = partial(self.loss_func, self)
+        self.add_param_bounds = [(None, None) for _ in range(len(self.add_params))]
 
         # for optimisation
         self.min_loss = 0
@@ -45,24 +49,27 @@ class SEMOptimiser:
         m_c = np.linalg.pinv(np.identity(m_beta.shape[0]) - m_beta)
         return m_lambda @ m_c @ m_psi @ m_c.T @ m_lambda.T + m_theta
 
-    @staticmethod
-    def get_loss_function(name):
+    def get_loss_function(self, name):
+        add_params = []  # additional parameters for optimisation
         if name == 'ULS':
-            return SEMOptimiser.unweighted_least_sqares
+            return SEMOptimiser.unweighted_least_sqares, add_params
         elif name == 'GLS':
-            return SEMOptimiser.general_least_squares
+            return SEMOptimiser.general_least_squares, add_params
         elif name == 'WLS':
-            return SEMOptimiser.weighted_least_squares
+            return SEMOptimiser.weighted_least_squares, add_params
         elif name == 'MLW':
-            return SEMOptimiser.ml_wishart
+            return SEMOptimiser.ml_wishart, add_params
         elif name == 'MLN':
-            return SEMOptimiser.ml_normal
+            return SEMOptimiser.ml_normal, add_params
         elif name == 'Naive':
-            return SEMOptimiser.naive_loss
+            return SEMOptimiser.naive_loss, add_params
         elif name == 'MLSkewed':
-            return SEMOptimiser.ml_skewed
+            # There are additional shape parameters of skewness in this method.
+            # Number of parameters is a number of variables in m_cov
+            add_params = np.ones(self.m_cov.shape[0]) * 0.05
+            return SEMOptimiser.ml_skewed, add_params
         elif name == 'MLGamma':
-            return SEMOptimiser.ml_gamma
+            return SEMOptimiser.ml_gamma, add_params
         else:
             raise Exception("ScipyBackend doesn't support loss function {}.".format(name))
 
@@ -92,7 +99,7 @@ class SEMOptimiser:
         if self.estimator == 'MLN':
             # options['ftol'] = 0.000001
             options['disp'] = True
-            self.loss_func = partial(self.loss_func, alpha=0.1)
+            self.loss_func = partial(self.loss_func, alpha=0.01)
             loss = self.loss_func(self.params)
 
             # to save best parameters during minimisation
@@ -111,15 +118,31 @@ class SEMOptimiser:
             self.params = self.min_params
 
         else:
-            loss = self.loss_func(self.params)
-            res = minimize(self.loss_func, self.params,
+            cons = dict()
+            if self.estimator == 'MLSkewed':
+                self.loss_func = partial(self.loss_func, alpha=0.01)
+                cons = ({'type': 'ineq', 'fun': lambda p: self.get_constr_skew_sigma(p)},
+                        {'type': 'ineq', 'fun': lambda p: self.get_constr_skew_cov(p)})
+
+            params_init = np.concatenate((self.params, self.add_params))
+            loss = self.loss_func(params_init)
+
+            # to save best parameters during minimisation
+            self.min_loss = loss
+            self.min_params = params_init
+            res = minimize(self.loss_func, params_init,
+                           constraints=cons,
                            method=optMethod, options=options,
-                           bounds=self.param_bounds)
-            self.params = res.x
+                           bounds=self.param_bounds + self.add_param_bounds)
+            if self.estimator != 'MLSkewed':
+                self.params = res.x[0:len(self.params)]
+                self.add_params = res.x[len(self.params):len(res.x)]
+            else:
+                self.params = self.min_params[0:len(self.params)]
+                self.add_params = self.min_params[len(self.params):len(self.min_params)]
 
-
-
-        loss = (loss, self.loss_func(self.params))
+        params_out = np.concatenate((self.params, self.add_params))
+        loss = (loss, self.loss_func(params_out))
         return loss
 
     def unweighted_least_sqares(self, params):
@@ -180,6 +203,7 @@ class SEMOptimiser:
         m_inv_sigma = np.linalg.inv(m_sigma)
         k = m_sigma.shape[0]
         acc_log_exp = 0
+        acc_log_exp1 = 0
         for y in m_profiles:
             acc_log_exp -= 1/2 * (log_det_sigma +
                                   y @ m_inv_sigma @ y +
@@ -189,7 +213,7 @@ class SEMOptimiser:
 
     def ml_normal(self, params, alpha=0.01):
         """
-
+        Multivariate Normal Distribution
         :param params:
         :param alpha:
         :return:
@@ -210,7 +234,6 @@ class SEMOptimiser:
         # TODO: Strange moment
         if loss < 0:
             return self.min_loss
-        print(loss)
 
         # add regularization term
         loss = loss + self.regularizator(params) * alpha
@@ -220,13 +243,78 @@ class SEMOptimiser:
             self.min_loss = loss
             self.min_params = params
 
-
-
         return loss
 
+    @staticmethod
+    def ml_skw_log_cdf_ratio(m_sigma, skw, m_profiles):
+        m_inv = np.linalg.inv(m_sigma)
+        acc_log_val = 0
+        for y in m_profiles:
+            acc_log_val += np.log(norm.cdf((skw @ m_inv @ y) / np.sqrt(1 - skw @ m_inv @ skw)))
+        return acc_log_val
 
-    def ml_skewed(self, params):
-        pass
+    def ml_skewed(self, params, alpha=0.01):
+        """
+        Multivariate Skewed Normal Distribution
+        :param params:
+        :return:
+        """
+        print(len(params))
+        # Divide parameters
+        params_sem = params[0:len(self.params)]
+        params_skw = params[len(self.params):len(params)]
+
+        # print(len(params_sem), params_sem)
+        # print(len(params_skw), params_skw)
+
+        m_sigma = self.calculate_sigma(params_sem)
+        m_cov = self.m_cov
+
+        # TODO need to be removed: A kind of regularisation
+        if self.get_constr_sigma(params_sem) < 0:
+            return 10 ** 20
+        if self.get_constr_skew_sigma(params) < 0:
+            return 10 ** 20
+        if self.get_constr_skew_cov(params) < 0:
+            return 10 ** 20
+
+        m_profiles = self.m_profiles
+
+        # # ---------------
+        # #   TMP
+        # # ---------------
+        # m_cov = sem_optimiser.m_cov
+        # m_sigma = sem_optimiser.calculate_sigma(sem_optimiser.params)
+        # m_profiles = sem_optimiser.m_profiles
+        # var = multivariate_normal(np.zeros(m_cov.shape[0]), m_sigma)
+        #
+        # sem_optimiser.ml_norm_log_likelihood(m_cov, [m_profiles[0]])
+        # sem_optimiser.ml_norm_log_likelihood(m_sigma, m_profiles)
+
+        #---------------
+
+        log_likelihood_sigma = self.ml_norm_log_likelihood(m_sigma, m_profiles)
+        log_likelihood_cov = self.ml_norm_log_likelihood(m_cov, m_profiles)
+        log_cdf_sigma = self.ml_skw_log_cdf_ratio(m_sigma, params_skw, m_profiles)
+        log_cdf_cov = self.ml_skw_log_cdf_ratio(m_cov, params_skw, m_profiles)
+
+        # if np.isnan(log_cdf_sigma)
+
+
+        # loss = np.abs(log_likelihood_sigma - log_likelihood_cov +log_cdf_sigma - log_cdf_cov)
+        loss = np.abs(log_likelihood_sigma - log_likelihood_cov + log_cdf_sigma)
+        loss = np.abs(log_likelihood_sigma - log_likelihood_cov)
+        loss = np.abs(log_likelihood_sigma)
+
+        print(loss, log_likelihood_sigma, log_likelihood_cov, log_cdf_sigma, log_cdf_cov)
+
+        # loss = self.ml_normal(params_sem, 0)
+        if (loss < self.min_loss) and (loss > 0):
+            self.min_loss = loss
+            self.min_params = params
+        # print(loss)
+        return loss
+
 
     def ml_gamma(self, params):
         pass
@@ -255,6 +343,27 @@ class SEMOptimiser:
         m_sigma = self.calculate_sigma(params)
         # return np.linalg.det(m_sigma) - 1e-6
         return sum(np.linalg.eig(m_sigma)[0]>0) - m_sigma.shape[0]
+
+    def get_constr_skew_sigma(self, params):
+        params_sem = params[0:len(self.params)]
+        params_skw = params[len(self.params):len(params)]
+
+        # print(len(params_sem), params_sem)
+        # print(len(params_skw), params_skw)
+
+        m_sigma = self.calculate_sigma(params_sem)
+        m_inv_sigma = np.linalg.pinv(m_sigma)
+        return 1 - params_skw @ m_inv_sigma @ params_skw - 1e-6
+
+    def get_constr_skew_cov(self, params):
+        params_skw = params[len(self.params):len(params)]
+
+        # print(len(params_sem), params_sem)
+        # print(len(params_skw), params_skw)
+
+        m_cov = self.m_cov
+        m_inv = np.linalg.pinv(m_cov)
+        return 1 - params_skw @ m_inv @ params_skw - 1e-6
 
 
     def gradient(self):
