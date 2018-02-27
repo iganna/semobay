@@ -1,0 +1,50 @@
+All variables: ['eta1', 'eta2', 'y1', 'y2', 'y3', 'y4', 'y5']
+Observable variables: ['y1', 'y2', 'y3', 'y4', 'y5']
+Structural part: ['eta1', 'eta2']
+Measurement part: ['y1', 'y2', 'y3', 'y4', 'y5']
+Latent varaibles: ['eta1', 'eta2']
+Endogenous variables: ['eta2']
+Exogenous variables: ['eta1']
+Beta
+Shape: (2, 2)
+       eta1  eta2
+eta1  0.000   0.0
+eta2  9.266   0.0
+Lambda
+Shape: (5, 2)
+     eta1   eta2
+y1  1.000  0.000
+y2  1.304  0.000
+y3  3.746  0.000
+y4  0.000  1.000
+y5  0.000  4.391
+Psi
+Shape: (2, 2)
+       eta1   eta2
+eta1  0.755  0.000
+eta2  0.000  0.937
+Theta
+Shape: (5, 5)
+       y1     y2     y3     y4     y5
+y1  1.023  0.000  0.000  0.000  0.000
+y2  0.000  1.037  0.000  0.000  0.000
+y3  0.000  0.000  0.753  0.000  0.000
+y4  0.000  0.000  0.000  1.095  0.000
+y5  0.000  0.000  0.000  0.000  0.869
+Empirical covariance matrix:
+Shape: (5, 5)
+        y1      y2       y3       y4        y5
+y1   1.777   0.941    2.797    6.947    30.789
+y2   0.941   2.322    3.720    8.981    40.038
+y3   2.797   3.720   11.346   26.250   115.039
+y4   6.947   8.981   26.250   66.849   288.709
+y5  30.789  40.038  115.039  288.709  1268.504
+Model-implied covariance matrix:
+Shape: (5, 5)
+        y1      y2       y3       y4        y5
+y1   1.778   0.985    2.828    6.994    30.711
+y2   0.985   2.322    3.689    9.124    40.061
+y3   2.828   3.689   11.345   26.201   115.042
+y4   6.994   9.124   26.201   66.842   288.679
+y5  30.711  40.061  115.042  288.679  1268.392
+Euclidian difference between them: 0.292531466065

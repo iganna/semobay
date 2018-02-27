@@ -1,48 +1,75 @@
-
-from semopy_model import SEMModel, SEMData
-from semopy_optimiser import SEMOptimiser
-from semopy_inspector import inspect, inspect_mx
+from sem_model import SEMModel, SEMData
+from sem_opt_classic import SEMOptClassic
+from sem_opt_bayes import SEMOptBayes
+from sem_inspector import inspect, inspect_mx
+from sem_opt_phylo import SEMModelNode
 import numpy as np
 from scipy.optimize import minimize
 
 
-# estimator = 'MLW'
+from scipy.stats import wishart
+
+
+estimator = 'MLW'
 # estimator = 'MLN'  # ANNA: This method is toooooooo time-consuming now
 # estimator = 'GLS'
 # estimator = 'ULS'
-estimator = 'MLSkewed'
+# estimator = 'MLSkewed'
 
 
 
-path_pref = 'schiza/'
-file_model = path_pref + 'mod_akt_single_cut.txt'
-file_data = path_pref + 'exprs_control.txt'
+# path_pref = 'schiza/'
+# file_model = path_pref + 'mod_akt_single_cut.txt'
+# file_data = path_pref + 'exprs_control.txt'
 
-# path_pref = 'data/'
-# file_model = path_pref + 'mod06.txt'
-# file_data = path_pref + 'example06.txt'
+path_model = 'data/'
+path_data = 'data/'
+path_res = 'res/'
+file_model = 'mod06.txt'
+file_data = 'example06.txt'
 
 
-mod = SEMModel(file_model)
-data = SEMData(mod, file_data)
+path_model = 'phylogeny/'
+path_data = 'phylogeny/'
+file_data = 'NEU.txt'
+file_model = 'mod_blood.txt'
+
+
+
+mod = SEMModel(path_model + file_model)
+data = SEMData(mod, path_data + file_data)
 mod.load_initial_dataset(data)
 
-# Pre optimisation
-# sem_optimiser0 = SEMOptimiser(mod, data, 'ULS')
-# sem_optimiser0.optimize()
 
-sem_optimiser = SEMOptimiser(mod, data, estimator, 'L2')
+opt_classic = SEMOptClassic(mod, data, estimator, regularization='lasso')
 
-with open(file_model[:-4] + '_before_anna.txt', 'w') as f:
-    inspect(mod, sem_optimiser, f)
+with open(path_res + file_model[:-4] + '_before_anna.txt', 'w') as f:
+    inspect(mod, opt_classic, f)
 
-sem_optimiser.optimize()
-
-with open(file_model[:-4] + '_after_anna_new' + estimator + '.txt', 'w') as f:
-    inspect(mod, sem_optimiser, f)
-# for mx_name in mod.matrices.keys():
-#     with open(file_model[:-4] + '_mx_' + mx_name + '.txt', 'w') as f:
-#         inspect_mx(mx_name, mod, sem_optimiser, f)
+reg_lambda = 0
+opt_classic.optimize(alpha=reg_lambda)
 
 
-#semPlot(sem)
+with open(path_res + file_model[:-4] + '_after_anna' + estimator +
+                  'lambda' + str(reg_lambda) + '.txt', 'w') as f:
+    inspect(mod, opt_classic, f)
+
+# print(opt_classic.loss_func(opt_classic, mod.param_val))
+print(opt_classic.loss_func(opt_classic, opt_classic.params))
+
+
+
+bayes_estimator = 'EmpBayes'
+# bayes_estimator = 'Likelihood'
+
+
+opt_bayes = SEMOptBayes(mod, data, opt_classic.params, bayes_estimator)
+opt_bayes.optimize()
+opt_bayes.params = np.median(opt_bayes.param_chain, axis=0)
+
+with open(path_res + file_model[:-4] + '_after_bayes' + estimator + '.txt', 'w') as f:
+    inspect(mod, opt_bayes, f)
+
+
+np.savetxt(path_res + 'chain.txt', opt_bayes.param_chain, '%.3f')
+
