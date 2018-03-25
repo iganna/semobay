@@ -421,7 +421,6 @@ class SEMModel:
 
 
 
-
         # Matrix Theta - covariances from measurement part
         for i, position in self.param_pos.items():
             mx_type, pos1, pos2 = position

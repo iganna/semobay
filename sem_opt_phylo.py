@@ -5,7 +5,7 @@ from sem_opt_abc import SEMOptABC
 from ete3 import Tree
 from typing import List
 from sem_opt_bayes import SEMOptBayes
-from itertools import combinations_with_replacement
+from itertools import combinations_with_replacement, combinations
 from functools import reduce
 from scipy.stats import invwishart, invgamma, wishart, norm, uniform, multivariate_normal
 from functools import partial
@@ -352,7 +352,7 @@ class SEMOptPhylo:
 
             # Try five times to get a parameter which satisfies the constraint
             for _ in range(5):
-                p_new = norm.rvs(p, 1, 1)
+                p_new = norm.rvs(p, 0.05, 1)
                 params_new[pos.id_opt] = p_new
                 # Constraint
                 if constraint_func(params_new, node_name) == 0:
@@ -375,7 +375,7 @@ class SEMOptPhylo:
                 # Reject new value
                 params_new[pos.id_opt] = p
             else:
-                # print(node_name, pos.mx_type, mh_log_stat)
+                print(node_name, pos.mx_type, mh_log_stat)
                 # Accept new value
                 params_opt[pos.id_opt] = params_new[pos.id_opt]
 
@@ -739,25 +739,39 @@ class SEMOptPhylo:
         Parameter Sigma of a Wiener process is prior distributed by inv-gamma
         :return:
         """
-        edge_lengths = []
-        for _, edges in self.tree.items():
-            edge_lengths += [edge[1] for edge in edges.dist]
+        id = {name:i for i, name in enumerate(list(self.tree.keys()))}
+        n_nodes = len(id)
+        dist_mx = np.zeros((n_nodes, n_nodes))
 
-        tree_height = 1/4 * sum(edge_lengths)
-        matrixes_cov = [mx for _, mx in self.m_cov.items()]
-        root_cov = 1/len(self.m_cov) * reduce(lambda x, y: x + y, matrixes_cov)
+        for node1, edges in self.tree.items():
+            for node2, dist in edges.dist:
+                dist_mx[id[node1], id[node2]] = dist
+                dist_mx[id[node2], id[node1]] = dist
 
-        dist_from_root = map(lambda x: np.abs(x-root_cov), matrixes_cov)
-        mean_dist_from_root = 1/len(self.m_cov) * \
-                            reduce(lambda x, y: x + y, dist_from_root)
+        while np.count_nonzero(dist_mx) < (n_nodes ** 2 - n_nodes):
+            for i, j in combinations(range(n_nodes), 2):
+                if dist_mx[i,j] > 0:
+                    continue
+                row_i = dist_mx[i]
+                row_j = dist_mx[j]
+                value = (row_i + row_j) * (row_i > 0) * (row_j > 0)
+                dist_mx[i, j] = dist_mx[j, i] = - max(np.unique(value))
+            dist_mx = np.abs(dist_mx)
 
-        p_tree_init = mean_dist_from_root / tree_height
-        p_tree_init.shape = p_tree_init.shape[0] ** 2
+        evolve_rate = []
+        for node1, node2 in combinations(self.m_cov.keys(), 2):
+            mx_cov_dist = np.abs(self.m_cov[node1] - self.m_cov[node2])
+            elements = mx_cov_dist[np.triu_indices(n_nodes)]
+            norm_elements = elements / dist_mx[id[node2], id[node1]]
+            evolve_rate += list(norm_elements)
 
-        df = sum([p.shape[0] for _, p in self.m_profiles.items()])
+
+
+        df = np.mean([p.shape[0] for _, p in self.m_profiles.items()])
         p_theta_alpha = df/2
-        p_theta_beta = np.median(p_tree_init) * (p_theta_alpha - 1)
-
+        # p_theta_alpha = 4
+        p_theta_beta = np.percentile(evolve_rate, 75) * (p_theta_alpha - 1)
+        print(p_theta_alpha, p_theta_beta)
         return p_theta_alpha, p_theta_beta
 
 

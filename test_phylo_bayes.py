@@ -29,9 +29,19 @@ opt_phylo.optimise()
 opt_phylo.param_val = opt_phylo.param_chain[-1]
 
 for node_name in opt_phylo.tree.keys():
-    with open(path_res + file_model[:-4] + 'node_' + node_name + '.txt', 'w') as f:
+    with open(path_res + file_model[:-4] + 'node_' + node_name + '_2.txt', 'w') as f:
         inspect(mod_node, opt_phylo, node_name, f)
 
 
-np.savetxt(path_res + 'chain2.txt', opt_phylo.param_chain, '%.3f')
+np.savetxt(path_res + 'chain6.txt', opt_phylo.param_chain, '%.3f')
+
+
+with open(path_res + file_model[:-4] + '_all_nodes' + '.txt', 'w') as f:
+    for node_name in opt_phylo.tree.keys():
+        params_node = opt_phylo.get_node_params(opt_phylo.param_val, node_name)
+        params_beta = [params_node[i] for i, k in mod_node.param_pos.items()
+                       if k[0] == 'Beta']
+        print(node_name, params_beta, file=f)
+
+
 
