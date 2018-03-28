@@ -10,6 +10,7 @@ from functools import reduce
 from scipy.stats import invwishart, invgamma, wishart, norm, uniform, multivariate_normal
 from functools import partial
 
+
 class SEMModelNode(SEMModel):
     """ Class node contain also covariance matrix as parameters"""
     def __init__(self, file_model):
@@ -107,16 +108,66 @@ class SEMTree:
         :param data:
         :param file_name:
         """
+
         tree = Tree(file_name)
 
         self.nodes = dict()
         self.n_nodes = 0
 
-        self.get_nodes(tree)
+
+        self.nodes['N0'] = SEMTreeNode('node')
+        self.nodes['N0'].add_dist('N1', 20.8)
+        self.nodes['N0'].add_dist('N3', 20.8)
+
+        self.nodes['N1'] = SEMTreeNode('node')
+        self.nodes['N1'].add_dist('N0', 20.8)
+        self.nodes['N1'].add_dist('N2', 33.7)
+        self.nodes['N1'].add_dist('NKL', 112.3)
+        self.nodes['N1'].add_dist('B19', 112.3)
+
+        self.nodes['NKL'] = SEMTreeNode('leaf')
+        self.nodes['NKL'].add_dist('N1', 112.3)
+
+        self.nodes['B19'] = SEMTreeNode('leaf')
+        self.nodes['B19'].add_dist('N1', 112.3)
+
+        self.nodes['N2'] = SEMTreeNode('node')
+        self.nodes['N2'].add_dist('N1', 33.7)
+        self.nodes['N2'].add_dist('CD4', 78.6)
+        self.nodes['N2'].add_dist('CD8', 78.6)
+
+        self.nodes['CD4'] = SEMTreeNode('leaf')
+        self.nodes['CD4'].add_dist('N2', 78.6)
+
+        self.nodes['CD8'] = SEMTreeNode('leaf')
+        self.nodes['CD8'].add_dist('N2', 78.6)
+
+        self.nodes['N3'] = SEMTreeNode('node')
+        self.nodes['N3'].add_dist('N0', 20.8)
+        self.nodes['N3'].add_dist('MON', 41.8)
+        self.nodes['N3'].add_dist('NEU', 112.3)
+
+        self.nodes['NEU'] = SEMTreeNode('leaf')
+        self.nodes['NEU'].add_dist('N3', 112.3)
+
+        self.nodes['MON'] = SEMTreeNode('leaf')
+        self.nodes['MON'].add_dist('N3', 41.8)
+        self.nodes['MON'].add_dist('DEN', 70.5)
+        self.nodes['MON'].add_dist('MRF', 70.5)
+
+        self.nodes['MRF'] = SEMTreeNode('leaf')
+        self.nodes['MRF'].add_dist('MON', 70.5)
+
+        self.nodes['DEN'] = SEMTreeNode('leaf')
+        self.nodes['DEN'].add_dist('MON', 70.5)
+
+
+        # self.get_nodes(tree)
         print(tree)
 
         # Compare names of datasets and leaves of the tree
         data_names = [data.name for data in dataset]
+        print(data_names)
         for name in data_names:
             if name not in self.nodes.keys():
                 raise ValueError('Dataset and Tree do not match')
@@ -748,7 +799,8 @@ class SEMOptPhylo:
                 dist_mx[id[node1], id[node2]] = dist
                 dist_mx[id[node2], id[node1]] = dist
 
-        while np.count_nonzero(dist_mx) < (n_nodes ** 2 - n_nodes):
+        # while np.count_nonzero(dist_mx) < (n_nodes ** 2 - n_nodes):
+        for _ in range(20):
             for i, j in combinations(range(n_nodes), 2):
                 if dist_mx[i,j] > 0:
                     continue
@@ -761,7 +813,7 @@ class SEMOptPhylo:
         evolve_rate = []
         for node1, node2 in combinations(self.m_cov.keys(), 2):
             mx_cov_dist = np.abs(self.m_cov[node1] - self.m_cov[node2])
-            elements = mx_cov_dist[np.triu_indices(n_nodes)]
+            elements = mx_cov_dist[np.triu_indices(len(mx_cov_dist))]
             norm_elements = elements / dist_mx[id[node2], id[node1]]
             evolve_rate += list(norm_elements)
 
@@ -771,7 +823,7 @@ class SEMOptPhylo:
         p_theta_alpha = df/2
         # p_theta_alpha = 4
         p_theta_beta = np.percentile(evolve_rate, 75) * (p_theta_alpha - 1)
-        print(p_theta_alpha, p_theta_beta)
+        # print(p_theta_alpha, p_theta_beta)
         return p_theta_alpha, p_theta_beta
 
 

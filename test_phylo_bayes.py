@@ -7,11 +7,17 @@ path_model = 'phylogeny/'
 path_data = 'phylogeny/'
 path_tree = 'phylogeny/'
 
+path_model = 'blood/'
+path_data = 'blood/'
+path_tree = 'blood/'
+
+
 path_res = path_data + 'res/'
 
-file_model = 'mod_blood.txt'
-files_data = ['CD4.txt', 'CD8.txt', 'MON.txt', 'NEU.txt']
-file_tree = 'tree_init.nwk'
+file_model = 'mod_blood01.txt'
+files_data = ['CD4.txt', 'CD8.txt', 'MON.txt', 'NEU.txt',
+              'MRF.txt', 'DEN.txt', 'NKL.txt', 'B19.txt']
+file_tree = 'tree_544samples_4param_2.nwk'
 
 
 mod_leaf = SEMModel(path_model + file_model)
@@ -33,7 +39,7 @@ for node_name in opt_phylo.tree.keys():
         inspect(mod_node, opt_phylo, node_name, f)
 
 
-np.savetxt(path_res + 'chain6.txt', opt_phylo.param_chain, '%.3f')
+np.savetxt(path_res + 'chain1.txt', opt_phylo.param_chain, '%.3f')
 
 
 with open(path_res + file_model[:-4] + '_all_nodes' + '.txt', 'w') as f:
