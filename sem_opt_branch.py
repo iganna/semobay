@@ -2,6 +2,7 @@ import numpy as np
 from sem_model import SEMData, SEMModel
 from sem_opt_classic import SEMOptClassic
 from sem_opt_abc import SEMOptABC
+from sem_opt_phylo import SEMOptPhylo, SEMModelNode, SEMTreeNode, SEMTree, Parameter
 from ete3 import Tree
 from typing import List
 from sem_opt_bayes import SEMOptBayes
@@ -11,167 +12,25 @@ from scipy.stats import invwishart, invgamma, wishart, norm, uniform, multivaria
 from functools import partial
 
 
-class SEMModelNode(SEMModel):
-    """ Class node contain also covariance matrix as parameters"""
-    def __init__(self, file_model):
-        """
 
-        :param file_model:
-        """
+class SEMBranch:
 
-        super().__init__(file_model)
-
-        # Save parameters
-        self.n_param_mod = self.n_param
-        # Add values in the covariance matrix as parameters
-        self.matrices['Cov'] = self.set_cov()
-
-
-
-    def set_cov(self):
-        """
-        Set additional parameters of a covariance matrix
-        :return:
-        """
-        v_mpart = self.d_vars['MPart']
-        n_mpart = len(v_mpart)
-        for p in combinations_with_replacement(range(n_mpart), 2):
-            self.add_parameter('Cov', p[0], p[1])
-
-        m_cov = np.zeros((n_mpart, n_mpart))
-        return m_cov
-
-
-    def load_initial_dataset(self, data: SEMData):
-        """
-        Load dataset: call super method and
-        :param data:
-        :return:
-        """
-        super().load_initial_dataset(data)
-
-        m_cov = data.m_cov
-        for i, position in self.param_pos.items():
-            mx_type, pos1, pos2 = position
-            if mx_type is not 'Cov':
-                continue
-            self.param_val[i] = m_cov[pos1, pos2]
-
-
-    def update_all(self, params=None):
-        """
-
-        :param params:
-        :return:
-        """
-        # Param-checker is within super-function
-        super().update_all(params)
-
-        if params is None:
-            params = self.param_val
-
-        for i, position in self.param_pos.items():
-            mx_type, pos1, pos2 = position
-            if mx_type is 'Cov':
-                self.matrices[mx_type][pos1, pos2] = params[i]
-                self.matrices[mx_type][pos2, pos1] = params[i]
-
-    def get_cov_param(self, m_cov, id_mod):
-        mx_type, pos1, pos2 = self.param_pos[id_mod]
-        if mx_type != 'Cov':
-            raise  ValueError('This is not a cell within Cov Matrix')
-        return m_cov[pos1, pos2]
-
-class SEMTreeNode:
-    def __init__(self, node_type):
-        """
-
-        :param node_type:
-        """
-        self.type = node_type
-        self.dist = []
-
-    def add_dist(self, name, dist):
-        """
-        :param name:
-        :param dist:
-        :return:
-        """
-        self.dist += [(name, dist)]
-
-
-
-class SEMTree:
-
-    def __init__(self, dataset: List[SEMData], file_name):
+    def __init__(self, node_names, node_attrs, b_length):
         """
         This function creates the
         :param data:
         :param file_name:
         """
 
-        tree = Tree(file_name)
-
-        self.nodes = dict()
-        self.n_nodes = 0
-
-
-        self.nodes['N0'] = SEMTreeNode('node')
-        self.nodes['N0'].add_dist('N1', 20.8)
-        self.nodes['N0'].add_dist('N3', 20.8)
-
-        self.nodes['N1'] = SEMTreeNode('node')
-        self.nodes['N1'].add_dist('N0', 20.8)
-        self.nodes['N1'].add_dist('N2', 33.7)
-        self.nodes['N1'].add_dist('NKL', 112.3)
-        self.nodes['N1'].add_dist('B19', 112.3)
-
-        self.nodes['NKL'] = SEMTreeNode('leaf')
-        self.nodes['NKL'].add_dist('N1', 112.3)
-
-        self.nodes['B19'] = SEMTreeNode('leaf')
-        self.nodes['B19'].add_dist('N1', 112.3)
-
-        self.nodes['N2'] = SEMTreeNode('node')
-        self.nodes['N2'].add_dist('N1', 33.7)
-        self.nodes['N2'].add_dist('CD4', 78.6)
-        self.nodes['N2'].add_dist('CD8', 78.6)
-
-        self.nodes['CD4'] = SEMTreeNode('leaf')
-        self.nodes['CD4'].add_dist('N2', 78.6)
-
-        self.nodes['CD8'] = SEMTreeNode('leaf')
-        self.nodes['CD8'].add_dist('N2', 78.6)
-
-        self.nodes['N3'] = SEMTreeNode('node')
-        self.nodes['N3'].add_dist('N0', 20.8)
-        self.nodes['N3'].add_dist('MON', 41.8)
-        self.nodes['N3'].add_dist('NEU', 112.3)
-
-        self.nodes['NEU'] = SEMTreeNode('leaf')
-        self.nodes['NEU'].add_dist('N3', 112.3)
-
-        self.nodes['MON'] = SEMTreeNode('leaf')
-        self.nodes['MON'].add_dist('N3', 41.8)
-        self.nodes['MON'].add_dist('DEN', 70.5)
-        self.nodes['MON'].add_dist('MRF', 70.5)
-
-        self.nodes['MRF'] = SEMTreeNode('leaf')
-        self.nodes['MRF'].add_dist('MON', 70.5)
-
-        self.nodes['DEN'] = SEMTreeNode('leaf')
-        self.nodes['DEN'].add_dist('MON', 70.5)
+        self.node_name1, self.node_name2, self.node_name3 = node_names
+        self.node_attr1, self.node_attr2, self.node_attr3 = node_attrs
+        self.n_nodes = 4
 
 
-        # self.get_nodes(tree)
-        print(tree)
+        self.b_length = b_length
+        self.param = b_length/5
 
-        # # Compare names of datasets and leaves of the tree
-        # data_names = [data.name for data in dataset]
-        # print(data_names)
-        # for name in data_names:
-        #     if name not in self.nodes.keys():
-        #         raise ValueError('Dataset and Tree do not match')
+        self.set_param(self.param)
 
 
 
@@ -200,73 +59,34 @@ class SEMTree:
             self.get_nodes(node)
         return
 
+    def set_param(self, param_new):
+        self.nodes = dict()
+        self.param = param_new
 
-class Parameter:
-    def __init__(self, node_name=None, mx_type=None, id_opt=None, id_mod=None):
+        self.nodes[self.node_name1] = SEMTreeNode(self.node_attr1)
+        self.nodes[self.node_name1].add_dist('Star', self.param)
 
-        self._node_name = ''
-        self._mx_type = ''
-        self._id_opt = -1
-        self._id_mod = -1
+        self.nodes[self.node_name2] = SEMTreeNode(self.node_attr2)
+        self.nodes[self.node_name2].add_dist('Star', self.b_length - self.param)
 
-        if node_name is not None:
-            self.node_name = node_name
-
-        if mx_type is not None:
-            self.mx_type = mx_type
-
-        if id_opt is not None:
-            self.id_opt = id_opt
-
-        if id_mod is not None:
-            self.id_mod = id_mod
+        self.nodes[self.node_name3] = SEMTreeNode(self.node_attr3)
+        self.nodes[self.node_name3].add_dist('Star', self.b_length - self.param)
 
 
-    @property
-    def mx_type(self):
-        return self._mx_type
-
-    @mx_type.setter
-    def mx_type(self, mx_type):
-        self._mx_type = mx_type
-
-    @property
-    def node_name(self):
-        return self._node_name
-
-    @node_name.setter
-    def node_name(self, node_name):
-        self._node_name = node_name
-
-    @property
-    def id_opt(self):
-        return self._id_opt
-
-    @id_opt.setter
-    def id_opt(self, id_opt):
-        self._id_opt = id_opt
-
-    @property
-    def id_mod(self):
-        return self._id_mod
-
-    @id_mod.setter
-    def id_mod(self, id_mod):
-        self._id_mod = id_mod
-
-    def set_param(self, node_name, mx_type, id_opt, id_mod):
-        self.node_name = node_name
-        self.mx_type = mx_type
-        self.id_opt = id_opt
-        self.id_mod = id_mod
+        self.nodes['Star'] = SEMTreeNode('node')
+        self.nodes['Star'].add_dist(self.node_name3, self.b_length - self.param)
+        self.nodes['Star'].add_dist(self.node_name2, self.b_length - self.param)
+        self.nodes['Star'].add_dist(self.node_name1, self.param)
 
 
-class SEMOptPhylo:
+
+class SEMOptBranch:
 
     def __init__(self,
                  mod_node: SEMModelNode,
+                 opt_phylo: SEMOptPhylo,
                  dataset: List[SEMData],
-                 tree: SEMTree,
+                 node_names, node_attrs,
                  estimator='From_Root'):
         """
 
@@ -275,8 +95,22 @@ class SEMOptPhylo:
         :param dataset:
         :param tree:
         """
-        # Save Tree nodes
-        self.tree = tree.nodes
+
+        # Optimal parameters
+        self.opt_param_val = opt_phylo.param_val
+        self.opt_param_pos = opt_phylo.param_pos
+
+        # Node Names
+        self.node_name1, self.node_name2, self.node_name3 = node_names
+        # Length of Branch
+        for none_name, d, in opt_phylo.tree[self.node_name1].dist:
+            if none_name == self.node_name2:
+                self.b_length = d
+                break
+
+        # Create tree
+        self.tree_init = SEMBranch(node_names, node_attrs, self.b_length)
+        self.tree = self.tree_init.nodes
 
         # Function to pump parameters through matrices
         self.get_matrices = mod_node.get_matrices
@@ -284,8 +118,13 @@ class SEMOptPhylo:
         self.n_param_mod = mod_node.n_param
 
         # Required Data
-        self.m_profiles = {data.name: data.m_profiles for data in dataset}
-        self.m_cov = {data.name: data.m_cov for data in dataset}  # Covariance matrix
+        self.m_profiles = {data.name: data.m_profiles for data in dataset
+                           if data.name in (self.node_name2, self.node_name3)}
+        # Covariance matrix
+        self.m_cov = {data.name: data.m_cov for data in dataset
+                      if data.name in (self.node_name1, self.node_name2,
+                                       self.node_name3)}  #
+
 
         # Get prior distributions
         # For this purpose ML-Wishard optimisation must be performed
@@ -305,8 +144,9 @@ class SEMOptPhylo:
         self.param_pos = []
         self.param_val = []
         self.n_params = 0
-        self.get_params(tree, mod_node)
+        self.get_params(self.tree_init, mod_node)
 
+        print(self.param_val[187])
 
         # Get priors for Beta, Lambda, Psi and Theta matrices
         self.p_psi_df, self.p_psi_cov = self.prior_params_psi()
@@ -317,6 +157,10 @@ class SEMOptPhylo:
 
         # Starting values of parameters
         self.set_params(mod_node, dataset)
+        print(self.param_val[187])
+        # Load optimised parameters
+        self.set_optimal_params()
+        print(self.param_val[187])
 
         # Options for the optimisation
         self.param_chain = np.array([self.param_val])
@@ -333,15 +177,8 @@ class SEMOptPhylo:
         tmp_dict = dict()
         tmp_dict['From_Root'] = (('Cov', self.log_post_cov, self.constraint_cov),
                                  ('Beta', self.log_post_beta, self.constraint_sigma),
-                                 ('Lambda', self.log_post_lambda, self.constraint_sigma),
-                                 ('Psi', self.log_post_psi, self.constraint_psi),
-                                 ('Theta', self.log_post_theta, self.constraint_theta),
-                                 ('Tree', self.log_post_tree, self.constraint_tree))
+                                 ('Branch', self.log_post_branch, self.constraint_branch))
 
-        tmp_dict['Likelihood'] = (self.log_likelihood, ('Psi',
-                                                        'Beta',
-                                                        'Theta',
-                                                        'Lambda'))
         return tmp_dict
 
     def get_loss_function(self, name):
@@ -363,17 +200,15 @@ class SEMOptPhylo:
 
             for mx_type, log_prob, constraint_func in self.loss_func:
 
-                if mx_type in {'Theta', 'Psi'}:  # Common parameters for all nodes
-                    node_order = [list(self.tree.keys())[0]]
-                elif mx_type == 'Tree':
+                if mx_type == 'Cov':  # Common parameters for all nodes
+                    node_order = ['Star']
+                elif mx_type == 'Branch':
                     node_order = [mx_type]
-                    mx_type = ['Beta', 'Lambda', 'Cov']
+                    mx_type = ['Star']
+                elif mx_type == 'Beta':
+                    node_order = self.node_name3 + 'Star'
                 else:
-                    leaf_names = list(self.m_profiles.keys())
-                    all_names = list(self.tree.keys())
-                    node_names = list(set(all_names) - set(leaf_names))
-                    node_names.sort(reverse=True)
-                    node_order = leaf_names + node_names
+                    continue
 
                 for node_name in node_order:
                     # print(node_name, mx_type)
@@ -404,7 +239,10 @@ class SEMOptPhylo:
 
             # Try five times to get a parameter which satisfies the constraint
             for _ in range(5):
-                p_new = norm.rvs(p, 0.05, 1)
+                if node_name == 'Branch':
+                    p_new = norm.rvs(p, 3, 1)
+                else:
+                    p_new = norm.rvs(p, 0.05, 1)
                 params_new[pos.id_opt] = p_new
                 # Constraint
                 if constraint_func(params_new, node_name) == 0:
@@ -418,6 +256,7 @@ class SEMOptPhylo:
             # Calculate the Metropolis-Hastings statistics
             mh_log_stat = np.exp(log_prob(params_new, node_name) -
                                  log_prob(params_opt, node_name))
+            # print(mh_log_stat)
             # print('1', log_prob(params_new, node_name), node_name)
             # print('2', log_prob(params_opt, node_name), node_name)
             # print(node_name, mx_type)
@@ -426,10 +265,18 @@ class SEMOptPhylo:
                     or (mh_log_stat == 1):
                 # Reject new value
                 params_new[pos.id_opt] = p
+                if node_name == 'Branch':
+                    print('BRANCH', p)
+                    self.tree_init.set_param(p)
+                    self.tree = self.tree_init.nodes
             else:
                 print(node_name, pos.mx_type, mh_log_stat)
                 # Accept new value
                 params_opt[pos.id_opt] = params_new[pos.id_opt]
+                if node_name == 'Branch':
+                    print('BRANCH', p_new)
+                    self.tree_init.set_param(p_new)
+                    self.tree = self.tree_init.nodes
 
         return params_new
 
@@ -449,6 +296,16 @@ class SEMOptPhylo:
             if p.node_name not in node_name:
                 continue
             params_opt[p.id_opt] = params_mod[p.id_mod]
+
+
+    def set_optimal_params(self):
+
+        for p in self.param_pos:
+            for opt_p in self.opt_param_pos:
+                if (p.node_name == opt_p.node_name) and \
+                    (p.mx_type == opt_p.mx_type) and \
+                        (p.id_mod == opt_p.id_mod):
+                    self.param_val[p.id_opt] = self.opt_param_val[opt_p.id_opt]
 
 
     def get_id_opt(self, node_name, id_mod):
@@ -479,7 +336,7 @@ class SEMOptPhylo:
         pos_evolve = [p for p in self.param_pos if p.node_name == 'Tree']
         prob_edge = 0
         for pos in pos_evolve:
-
+            # print(pos.node_name, pos.mx_type, pos.id_opt, pos.id_mod,node_name1, node_name2)
 
             if (node_name1 in self.m_cov.keys()) and (pos.mx_type == 'Cov'):
                 x = self.get_cov_param(self.m_cov[node_name1], pos.id_mod)
@@ -543,6 +400,7 @@ class SEMOptPhylo:
     def log_post_cov(self, params_opt, node_name):
         prob_cov = self.log_likelihood(params_opt, node_name)
         for node_name2, dist in self.tree[node_name].dist:
+            # print(node_name, node_name2, dist)
             prob_cov += self.log_edge(node_name, node_name2, dist, params_opt)
         return prob_cov
 
@@ -551,6 +409,7 @@ class SEMOptPhylo:
         prob_tree = self.log_prior_tree(params_opt)
         # print('prob_tree', prob_tree)
         for node_name, edges in self.tree.items():
+            # TODO
             if len(edges.dist) == 2:  # If root
                 continue
             edge = edges.dist[0]
@@ -562,7 +421,30 @@ class SEMOptPhylo:
         return prob_tree
 
 
-    def get_params(self, tree: SEMTree, mod_node: SEMModelNode):
+    def log_post_branch(self, params_opt, *args):
+        prob_tree = 0
+        # Get the value of the tree-parameter
+        param_branch = [params_opt[p.id_opt] for p in \
+                        self.param_pos if
+                        p.node_name == 'Branch']
+        # Change Tree First
+        self.tree_init.set_param(param_branch[0])
+        self.tree = self.tree_init.nodes
+
+        for node_name, edges in self.tree.items():
+            # TODO
+            if len(edges.dist) == 2:  # If root
+                continue
+            edge = edges.dist[0]
+            node_name2, dist = edge
+            # print(node_name, node_name2, dist)
+            # print('prob_tree', prob_tree)
+            prob_tree += self.log_edge(node_name, node_name2, dist, params_opt)
+            # print('prob_tree', prob_tree)
+        return prob_tree
+
+
+    def get_params(self, tree: SEMBranch, mod_node: SEMModelNode):
 
         # Common Theta and Psi matrices
         node_names = tree.nodes.keys()
@@ -632,6 +514,13 @@ class SEMOptPhylo:
             # self.param_val += [mod_node.param_val[i]]
             self.n_params += 1
 
+        # Add new BRANCH param
+        self.param_pos += [Parameter(node_name='Branch',
+                                     mx_type='Star',
+                                     id_opt=self.n_params,
+                                     id_mod=-1)]
+        self.n_params += 1
+
         self.param_val = np.zeros(self.n_params)
 
 
@@ -654,6 +543,9 @@ class SEMOptPhylo:
                 self.param_val[pos.id_opt] = 1
                 continue
             if pos.mx_type in {'Beta', 'Lambda'}:
+                continue
+            if pos.node_name is 'Branch':
+                self.param_val[pos.id_opt] = self.b_length/2
                 continue
             self.param_val[pos.id_opt] = mod_node.param_val[pos.id_mod]
 
@@ -722,6 +614,11 @@ class SEMOptPhylo:
                                        self.p_lambda_cov * ms_theta[pos.id_mod,
                                                                     pos.id_mod])
         return prob_lambda
+
+
+    def log_prior_branch(self, params_opt):
+        """ Uniform """
+        return 0 # Log(1) = 0
 
 
     def prior_params_psi(self):
@@ -873,6 +770,16 @@ class SEMOptPhylo:
 
         m_c = np.linalg.pinv(np.identity(m_beta.shape[0]) - m_beta)
         return m_lambda @ m_c @ m_psi @ m_c.T @ m_lambda.T + m_theta
+
+
+    def constraint_branch(self, params_opt, *args):
+        param_branch = [params_opt[p.id_opt] for p in \
+                        self.param_pos if
+                        p.node_name == 'Branch']
+        if (0 <= param_branch[0] <= self.b_length):
+            return 0
+        else:
+            return -1
 
 
 
