@@ -50,7 +50,7 @@ for node_names, node_attrs in tests:
 
     opt_branch.optimise()
     opt_branch.param_val = opt_branch.param_chain[-1]
-    
+
 
     for node_name in opt_phylo.tree.keys():
         with open(path_res + file_model[:-4] + 'node_' + node_name + '_2.txt', 'w') as f:
@@ -82,5 +82,5 @@ for node_names, node_attrs in tests:
     # from scipy.stats import invwishart, invgamma, wishart, norm, uniform, multivariate_normal
     # log_prob = opt_branch.log_post_branch
     #
-    # [(p.node_name, p.mx_type, p.id_opt, p.id_mod, opt_phylo.param_val[p.id_opt])
-    #  for p in opt_phylo.param_pos]
+    [(p.node_name, p.mx_type, p.id_opt, p.id_mod, opt_phylo.param_val[p.id_opt])
+     for p in opt_phylo.param_pos]

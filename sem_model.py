@@ -40,11 +40,11 @@ class SEMData:
         data = read_csv(file_name, sep=sep)
         if min(data.shape) == 1:
             sep = '\t'
-            data = read_csv(file_name, sep='\t')
+            data = read_csv(file_name, sep=sep)
         if min(data.shape) == 1:
             raise ValueError('Dataset is of vector form')
         if 'Unnamed: 0' in list(data):
-            data = read_csv(file_name, sep='\t', index_col=0)
+            data = read_csv(file_name, sep=sep, index_col=0)
 
         try:
             data = (data[sem.d_vars['MPart']]).as_matrix()
@@ -370,15 +370,15 @@ class SEMModel:
             if mx_type != 'Beta':
                 continue
 
-            if v_spart[pos1] in v_lat:
-                profile1 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos1]]]]
-            else:
-                profile1 = m_profiles[:, d_mpart[v_spart[pos1]]]
-
-            if v_spart[pos2] in v_lat:
-                profile2 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos2]]]]
-            else:
-                profile2 = m_profiles[:, d_mpart[v_spart[pos2]]]
+            # if v_spart[pos1] in v_lat:
+            #     profile1 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos1]]]]
+            # else:
+            #     profile1 = m_profiles[:, d_mpart[v_spart[pos1]]]
+            #
+            # if v_spart[pos2] in v_lat:
+            #     profile2 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos2]]]]
+            # else:
+            #     profile2 = m_profiles[:, d_mpart[v_spart[pos2]]]
 
             # lin_reg = linregress(profile2, profile1)
             # self.param_val[i] = lin_reg.slope

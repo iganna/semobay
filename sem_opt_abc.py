@@ -18,6 +18,7 @@ class SEMOptABC(ABC):
         self.estimator = estimator
         self.get_matrices = mod.get_matrices
         self.params = np.array(mod.param_val)
+        self.param_pos = mod.param_pos
         self.param_bounds = mod.get_bounds()
 
         self.m_profiles = data.m_profiles

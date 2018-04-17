@@ -20,9 +20,9 @@ def get_regul(name: str = None):
         return 0
     if name is None:
         return regul_zero
-    elif name.lower() == 'l1' or name.lower() == 'lasso':
+    elif name.lower() == 'l1' or name.lower() == 'ridge':
         return regul_l1
-    elif name.lower() == 'l2' or name.lower() == 'ridge':
+    elif name.lower() == 'l2' or name.lower() == 'lasso':
         return regul_l2
     else:
         return regul_zero

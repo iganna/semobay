@@ -49,9 +49,12 @@ class SEMOptClassic(SEMOptABC):
         :param alpha:
         :return:
         """
-        def func_to_min(p):
+        def func_to_min(params):
             """ Sum of loss function and regularisation """
-            return self.loss_func(self, p) + alpha * self.regularization(p)
+            p_beta = [p for i, p in enumerate(params) if self.param_pos[i][0]
+                      == 'Beta']
+            return self.loss_func(self, params) + \
+                   alpha * self.regularization(p_beta)
 
         # Specify initial parameters and function to minimize
         params_init = self.params

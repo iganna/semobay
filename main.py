@@ -25,14 +25,14 @@ estimator = 'MLW'
 path_model = 'data/'
 path_data = 'data/'
 path_res = 'res/'
-file_model = 'mod06.txt'
-file_data = 'example06.txt'
+file_model = 'mod01_full.txt'
+file_data = 'example01.txt'
 
-
-path_model = 'phylogeny/'
-path_data = 'phylogeny/'
-file_data = 'NEU.txt'
-file_model = 'mod_blood.txt'
+#
+# path_model = 'phylogeny/'
+# path_data = 'phylogeny/'
+# file_data = 'NEU.txt'
+# file_model = 'mod_blood.txt'
 
 
 
@@ -40,24 +40,36 @@ mod = SEMModel(path_model + file_model)
 data = SEMData(mod, path_data + file_data)
 mod.load_initial_dataset(data)
 
+reg_lambda = 0.075
 
 opt_classic = SEMOptClassic(mod, data, estimator, regularization='lasso')
 
 with open(path_res + file_model[:-4] + '_before_anna.txt', 'w') as f:
     inspect(mod, opt_classic, f)
 
-reg_lambda = 0
+
 opt_classic.optimize(alpha=reg_lambda)
 
 
-with open(path_res + file_model[:-4] + '_after_anna' + estimator +
-                  'lambda' + str(reg_lambda) + '.txt', 'w') as f:
+with open(path_res + file_model[:-4] + '_new' + estimator +
+                  '_lambda' + str(reg_lambda) + '.txt', 'w') as f:
     inspect(mod, opt_classic, f)
 
 # print(opt_classic.loss_func(opt_classic, mod.param_val))
 print(opt_classic.loss_func(opt_classic, opt_classic.params))
 
+# =========================================
+opt_classic = SEMOptClassic(mod, data, estimator, regularization='lasso')
+opt_classic.optimize()
+regul_chain = np.array([opt_classic.params])
+for reg_lambda in [x/5 for x in range(100)]:
+    print(reg_lambda)
+    # opt_classic = SEMOptClassic(mod, data, estimator, regularization='lasso')
+    opt_classic.optimize(alpha=reg_lambda)
+    regul_chain = np.append(regul_chain, [opt_classic.params], axis=0)
 
+np.savetxt(path_res + 'regul_params.txt', regul_chain, '%.3f')
+# =========================================
 
 bayes_estimator = 'EmpBayes'
 # bayes_estimator = 'Likelihood'
