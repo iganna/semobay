@@ -1,0 +1,16 @@
+eta1 ~ eta2 + xi1 + g1 + g2 + g3
+eta2 ~ xi1
+eta3 ~ eta2 + xi2 + g1 + g2 + g3
+eta4 ~ eta1 + xi1 + xi2 + g1 + g2 + g3
+eta1 =~ u1 + v1
+eta2 =~ u1 + v2
+eta3 =~ u3 + v2
+eta4 =~ u4 + v4
+xi1 =~ u3
+xi2 =~ u4
+v1 : ordinal
+v2 : ordinal
+v4 : ordinal
+g1 : binary
+g2 : binary
+g3 : binary

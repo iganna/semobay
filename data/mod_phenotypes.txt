@@ -1,0 +1,9 @@
+# measurement part
+PC1 =~ FloCol + StemCol + FlowStemCol + NoPodsWeight + PodLength + PodWidth + SeedCol + Seed1000W 
+PC2 =~ PodsWeight + PodsNumber + SeedsNumber + SeedsWeight 
+PC3 =~ BegFEndF + EndFBegM 
+PC4 =~ Germ + FloCol + BushShape + AscoRes + Height + Hlp + SeedShape + SeedCol 
+PC5 =~ BegFEndF + StemBr + StemBr1ord + StemBr2ord 
+PC6 =~ BegFEndF + EndFBegM + BegMEndM + StemL1ord 
+PC7 =~ GBegF + BegMEndM + StemBr 
+PC8 =~ Germ + StemL1ord + PodS 

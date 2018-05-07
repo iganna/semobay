@@ -28,6 +28,9 @@ path_res = 'res/'
 file_model = 'mod01_full.txt'
 file_data = 'example01.txt'
 
+file_model = 'mod_gp01.txt'
+
+
 #
 # path_model = 'phylogeny/'
 # path_data = 'phylogeny/'

@@ -13,7 +13,7 @@ def get_regul(name: str = None):
 
     def regul_l2(params):
         """ LASSO """
-        return np.linalg.norm(params)
+        return np.linalg.norm(params) ** 2
 
     def regul_zero(params):
         """ none """

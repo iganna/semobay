@@ -3,10 +3,13 @@ from collections import defaultdict
 from enum import Enum
 
 
+# TODO not to allow a name of variable started from '_'
+
 class SEMOperations(Enum):
     REGRESSION = '~'
     MEASUREMENT = '=~'
     COVARIANCE = '~~'
+    TYPE = ':'
 
 
 class SEMParser:
@@ -36,4 +39,7 @@ class SEMParser:
                     for rvalue in rvalues:
                         d[rvalue[0]]
                         d[lvalue][op][rvalue[0]] += rvalue[1:]
+
+        d.pop('binary')
+        d.pop('ordinal')
         return d

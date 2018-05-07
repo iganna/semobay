@@ -10,6 +10,13 @@ import os
 
 class SEMData:
     def __init__(self, sem, file_name, center=True):
+        """
+        This function ...
+        :param sem:
+        :param file_name:
+        :param center:
+        :return:
+        """
 
 
         if not isinstance(sem, SEMModel):
@@ -344,7 +351,6 @@ class SEMModel:
                 self.matrices[mx_type][pos1, pos2] = params[i]
                 self.matrices[mx_type][pos2, pos1] = params[i]
 
-
     def load_initial_dataset(self, data: SEMData):
         """
         Set Initial values into Matrices
@@ -441,7 +447,6 @@ class SEMModel:
 
         # DO NOT Update matrices
 
-
     def get_matrices(self, params=None, mx_type='All'):
         """
         Matrices are updated by default
@@ -459,7 +464,6 @@ class SEMModel:
             return self.matrices
         if mx_type in self.matrices.keys():
             return self.matrices[mx_type]
-
 
     def get_bounds(self):
         mx_to_fix = ['Theta', 'Psi']
@@ -483,7 +487,6 @@ class SEMModel:
             raise ValueError('Length of parameters is not valid')
         if not all(isinstance(p, (int, float)) for p in params):
             raise ValueError('Invalid values')
-
 
     def check_covariances(self, output=stdout):
         """
