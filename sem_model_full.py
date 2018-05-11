@@ -4,10 +4,11 @@ from scipy.stats import linregress
 from pandas import read_csv
 from sys import stdout
 import itertools as it
+from enum import Enum
 import os
 
 
-class SEMMatrices(Enum):
+class SEMmx:
     BETA = 'Beta'
     GAMMA = 'Gamma'
     PI = 'Pi'
@@ -17,6 +18,27 @@ class SEMMatrices(Enum):
     PHI_Y = 'Phi_y'
     THETA_DELTA = 'Theta_delta'
     THETA_EPS = 'Theta_eps'
+    LAMBDA_U_ETA = 'Lambda_u_eta'
+    LAMBDA_U_XI = 'Lambda_u_xi'
+    LAMBDA_V_ETA = 'Lambda_v_eta'
+    LAMBDA_V_XI = 'Lambda_v_xi'
+    LAMBDA_PARTS = [LAMBDA_U_ETA, LAMBDA_U_XI, LAMBDA_V_ETA, LAMBDA_V_XI]
+    KAPPA_U = 'Kappa_u'
+    KAPPA_V = 'Kappa_v'
+    KAPPA_PARTS = [KAPPA_U, KAPPA_V]
+    SPART = 'Struct_Part'
+    MPART = 'Measur_Part'
+    SPART_COMB = [BETA, GAMMA, PI]  # Matrices in Structural Part
+    MPART_COMB = [LAMBDA, KAPPA]  # Matrices in Measurement Part
+    MX_COMB = [SPART, MPART]
+    SYMMETRIC = [PHI_XI, PHI_Y, THETA_DELTA, THETA_EPS]  # SYMMETRIC MATRICES
+    SIGMA_ETA = 'Sigma_eta'
+    SIGMA_OMEGA = 'Sigma_omega'
+    SIGMA_Z = 'Sigma_z'
+    SIGMA_X = 'Sigma_x'
+    SIGMAS = [SIGMA_ETA, SIGMA_Z, SIGMA_OMEGA, SIGMA_X]
+
+
 
 
 class SEMModelFull:
@@ -42,34 +64,35 @@ class SEMModelFull:
 
         # Set matrices and parameters
         self.n_param = 0
-        self.param_pos = {}
+        self.param_pos = []
         self.param_val = []  # initial values of parameters
 
         self.matrices = dict()
-        self.matrices['Beta'] = self.set_beta()
-        self.matrices['Gamma'] = self.set_gamma()
-        self.matrices['Kappa'] = self.set_kappa()
-        self.matrices['Pi'] = self.set_pi()
-        self.matrices['Lambda'] = self.set_lambda()
+
+        # Get Matrices of path coefficients
+        self.matrices[SEMmx.BETA] = self.set_beta()
+        self.matrices[SEMmx.GAMMA] = self.set_gamma()
+        self.matrices[SEMmx.KAPPA] = self.set_kappa()
+        self.matrices[SEMmx.PI] = self.set_pi()
+        self.matrices[SEMmx.LAMBDA] = self.set_lambda()
+
+        # Get Symmetric Matrices of covariances
+        self.matrices[SEMmx.THETA_DELTA] = self.set_theta_delta()
+        self.matrices[SEMmx.THETA_EPS] = self.set_theta_eps()
+        self.matrices[SEMmx.PHI_XI] = self.set_phi_xi()
+        self.matrices[SEMmx.PHI_Y] = self.set_phi_y()
+
+        # Create Blocks of Matrices
+        self.matrices.update(self.set_lambda_parts())
+        self.matrices.update(self.set_kappa_parts())
+
+        # Create Combined Matrices
+        self.matrices[SEMmx.SPART] = \
+            self.set_mx_combined(SEMmx.SPART_COMB)
+        self.matrices[SEMmx.MPART] = \
+            self.set_mx_combined(SEMmx.MPART_COMB)
 
 
-        self.matrices['Theta_delta'] = self.set_theta_delta()
-        self.matrices['Theta_eps'] = self.set_theta_eps()
-        self.matrices['Psi_xi'] = self.set_psi_xi()
-        self.matrices['Psi_y'] = self.set_psi_y()
-
-
-
-        self.symm = dict()
-        self.symm['Beta'] = False
-        self.symm['Gamma'] = False
-        self.symm['Kappa'] = False
-        self.symm['Pi'] = False
-        self.symm['Lambda'] = False
-        self.symm['Theta_delta'] = True
-        self.symm['Theta_eps'] = True
-        self.symm['Psi_xi'] = True
-        self.symm['Psi_y'] = True
 
 
     # # TODO
@@ -85,7 +108,6 @@ class SEMModelFull:
     def classify_vars(model, sem_op):
         """
 
-
         ANNA: variable are classified into categories:
         ObsBin - SNPs variables, observed exogenous in Structural part
         ObsNorm - Phenotype variables which are normally distributed
@@ -98,6 +120,7 @@ class SEMModelFull:
         LatOutput - Latent Variables which are fully output
 
         :param model:
+        :param sem_op:
         :return:
         """
 
@@ -183,7 +206,7 @@ class SEMModelFull:
 
         return acc
 
-    def add_parameter(self, param_type, pos1, pos2=None):
+    def add_parameter(self, param_type, pos1, pos2, param_id = None):
         """
         Add new parameters
         :param param_type:
@@ -191,9 +214,12 @@ class SEMModelFull:
         :param pos2:
         :return:
         """
-        self.param_pos[self.n_param] = (param_type, pos1, pos2)
-        self.param_val.append(0)
-        self.n_param += 1
+        if param_id is None:
+            param_id = self.n_param
+            self.n_param += 1
+            self.param_val.append(0)
+
+        self.param_pos += (param_type, pos1, pos2, param_id)
 
     def set_beta(self):
         """
@@ -385,7 +411,24 @@ class SEMModelFull:
             self.add_parameter('Phi_y', d_g[v1], d_g[v2])
         return m_phi_xi
 
-    def get_lambda_part(self, params, lambda_part):
+    def set_mx_combined(self, mx_list):
+
+        mx_combined = np.concatenate((self.matrices[mx] for mx in mx_list),
+                                     axis=1)
+
+        n_col_shift = {mx1: self.matrices[mx2].shape[1]
+                       for mx1, mx2 in zip(mx_list[:-1], mx_list[1:])}
+
+        for mx_type, pos1, pos2, param_id in self.param_pos:
+            if mx_type not in mx_list:
+                continue
+            self.add_parameter(mx_type,
+                               pos1, pos2 + n_col_shift[mx_type],
+                               param_id)
+
+        return mx_combined
+
+    def set_lambda_parts(self):
         """
 
         :param params:
@@ -399,29 +442,49 @@ class SEMModelFull:
         d_x = self.d_vars['d_x']
         d_omega = self.d_vars['d_omega']
 
-        if lambda_part is 'Lambda_u_eta':
-            rows = [i for k, i in d_x if k in v_u]
-            cols = [i for k, i in d_omega if k in v_eta]
-        elif lambda_part is 'Lambda_v_eta':
-            rows = [i for k, i in d_x if k in v_v]
-            cols = [i for k, i in d_omega if k in v_eta]
-        elif lambda_part is 'Lambda_u_xi':
-            rows = [i for k, i in d_x if k in v_u]
-            cols = [i for k, i in d_omega if k in v_xi]
-        elif lambda_part is 'Lambda_v_xi':
-            rows = [i for k, i in d_x if k in v_v]
-            cols = [i for k, i in d_omega if k in v_xi]
-        else:
-            raise ValueError('Invalid Matrix Name')
+        mx_lambda = self.matrices[SEMmx.LAMBDA]
+        lambda_params = [(pos1, pos2, param_id)
+                         for mx_type, pos1, pos2, param_id in self.param_pos
+                         if mx_type == SEMmx.LAMBDA]
 
-        mx_lambda = self.get_matrix(params, 'Lambda')
-        return mx_lambda[rows, cols]
+        mx_lambda_parts = dict()
 
+        for lambda_part in SEMmx.LAMBDA_PARTS:
+            if lambda_part is SEMmx.LAMBDA_U_ETA:
+                rows = [i for k, i in d_x if k in v_u]
+                cols = [i for k, i in d_omega if k in v_eta]
+            elif lambda_part is SEMmx.LAMBDA_V_ETA:
+                rows = [i for k, i in d_x if k in v_v]
+                cols = [i for k, i in d_omega if k in v_eta]
+            elif lambda_part is SEMmx.LAMBDA_U_XI:
+                rows = [i for k, i in d_x if k in v_u]
+                cols = [i for k, i in d_omega if k in v_xi]
+            elif lambda_part is SEMmx.LAMBDA_V_XI:
+                rows = [i for k, i in d_x if k in v_v]
+                cols = [i for k, i in d_omega if k in v_xi]
+            else:
+                raise ValueError('Invalid Matrix Name')
 
-    def get_kappa_part(self, params, lambda_part):
+            # Create New Matrix. It is important to copy initial Lambda as
+            # Lambda contains several 1-values for the first manifest variable
+            mx_tmp = np.array(mx_lambda[rows, cols])
+            # Add the new matrix to the set of all Matrices
+            mx_lambda_parts[lambda_part] = mx_tmp
+
+            # Add annotations of new parameters
+            row_order = {row: i for i, row in enumerate(rows)}
+            col_order = {col: i for i, col in enumerate(cols)}
+            for pos1, pos2, param_id in lambda_params:
+                if (pos1 in rows) and (pos2 in cols):
+                    self.add_parameter(lambda_part,
+                                       row_order[pos1],
+                                       col_order[pos2], param_id)
+
+        return mx_lambda_parts
+
+    def set_kappa_parts(self):
         """
 
-        :param params:
         :return:
         """
         v_u = self.d_vars['u']
@@ -429,16 +492,35 @@ class SEMModelFull:
 
         d_x = self.d_vars['d_x']
 
-        if lambda_part is 'Kappa_u':
-            rows = [i for k, i in d_x if k in v_u]
-        elif lambda_part is 'Kappa_v':
-            rows = [i for k, i in d_x if k in v_v]
-        else:
-            raise ValueError('Invalid Matrix Name')
+        mx_kappa= self.matrices[SEMmx.KAPPA]
+        kappa_params = [(pos1, pos2, param_id)
+                        for mx_type, pos1, pos2, param_id in self.param_pos
+                        if mx_type == SEMmx.LAMBDA]
 
-        mx_kappa = self.get_matrix(params, 'Kappa')
-        return mx_kappa[rows, ]
+        mx_kappa_parts = dict()
+        for kappa_part in SEMmx.KAPPA_PARTS:
+            if kappa_part is SEMmx.KAPPA_U:
+                rows = [i for k, i in d_x if k in v_u]
+            elif kappa_part is SEMmx.LAMBDA_V_ETA:
+                rows = [i for k, i in d_x if k in v_v]
 
+            else:
+                raise ValueError('Invalid Matrix Name')
+
+            # Create New Matrix. It is important to copy initial Kappa as
+            # Kappa contains several 1-values for the first manifest variable
+            mx_tmp = np.array(mx_kappa[rows, :])
+            # Add the new matrix to the set of all Matrices
+            mx_kappa_parts[kappa_part] = mx_tmp
+
+            # Add annotations of new parameters
+            row_order = {row: i for i, row in enumerate(rows)}
+            for pos1, pos2, param_id in kappa_params:
+                if pos1 in rows:
+                    self.add_parameter(kappa_part,
+                                       row_order[pos1], pos2, param_id)
+
+        return mx_kappa_parts
 
     def get_matrix(self, params, mx_name):
         """
@@ -447,70 +529,74 @@ class SEMModelFull:
         :return:
         """
 
-        if mx_name is 'Seigma_eta':
-            return self.get_sigma_eta(params)
-        if mx_name is 'Sigma_omega':
-            return self.get_sigma_omega(params)
-        if mx_name in {'Sigma_v', 'Sigma_z'}:
-            return self.get_sigma_z(params)
+        # If matrix should be calculated
+        if mx_name in SEMmx.SIGMAS:
+            return self.get_sigma(params, mx_name)
 
-        # TODO redurn different lambda
-        if mx_name in {'Lambda_u_eta', 'Lambda_u_xi',
-                       'Lambda_v_eta', 'Lambda_u_xi'}:
-            return self.get_lambda_part(params, mx_name)
-
-        for i, position in self.param_pos.items():
-            mx_type, pos1, pos2 = position
+        for mx_type, pos1, pos2, param_id in self.param_pos:
             if mx_type is not mx_name:
                 continue
-            self.matrices[mx_type][pos1, pos2] = params[i]
-            if self.symm[mx_type]:
-                self.matrices[mx_type][pos2, pos1] = params[i]
+            self.matrices[mx_type][pos1, pos2] = params[param_id]
+            if mx_type in SEMmx.SYMMETRIC:
+                self.matrices[mx_type][pos2, pos1] = params[param_id]
 
         return self.matrices[mx_name]
 
-    def get_sigma_eta(self, params):
-        m_beta = self.get_matrix(params, 'Beta')
-        m_gamma = self.get_matrix(params, 'Gamma')
-        m_pi = self.get_matrix(params, 'Pi')
-        m_phi_xi = self.get_matrix(params, 'Phi_xi')
-        m_phi_y = self.get_matrix(params, 'Phi_y')
-        m_theta_delta = self.get_matrix(params, 'Theta_delta')
+    def get_sigma(self, params, mx_name):
 
-        m_c = np.linalg.pinv(np.identity(m_beta.shape[0]) - m_beta)
+        def get_sigma_eta(params):
+            m_beta = self.get_matrix(params, SEMmx.BETA)
+            m_gamma = self.get_matrix(params, SEMmx.GAMMA)
+            m_pi = self.get_matrix(params, SEMmx.PI)
+            m_phi_xi = self.get_matrix(params, SEMmx.PHI_XI)
+            m_phi_y = self.get_matrix(params, SEMmx.PHI_Y)
+            m_theta_delta = self.get_matrix(params, SEMmx.THETA_DELTA)
 
-        return m_c @ (m_gamma @ m_phi_xi @ m_gamma.T +
-                      m_pi @ m_phi_y @ m_pi.T +
-                      m_theta_delta) @ m_c.T
+            m_c = np.linalg.pinv(np.identity(m_beta.shape[0]) - m_beta)
 
-    def get_sigma_omega(self, params):
-        pass
+            return m_c @ (m_gamma @ m_phi_xi @ m_gamma.T +
+                          m_pi @ m_phi_y @ m_pi.T +
+                          m_theta_delta) @ m_c.T
 
-    def get_sigma_z(self, params):
-        m_beta = self.get_matrix(params, 'Beta')
-        m_gamma = self.get_matrix(params, 'Gamma')
-        m_pi = self.get_matrix(params, 'Pi')
-        m_phi_xi = self.get_matrix(params, 'Phi_xi')
-        m_phi_y = self.get_matrix(params, 'Phi_y')
-        m_theta_delta = self.get_matrix(params, 'Theta_delta')
-        m_theta_eps = self.get_matrix(params, 'Theta_eps')
-        m_c = np.linalg.pinv(np.identity(m_beta.shape[0]) - m_beta)
+        def get_sigma_omega(params):
+            pass
 
-        m_lambda_v_eta = self.get_lambda_part(params, 'Lambda_v_eta')
-        m_lambda_v_xi = self.get_lambda_part(params, 'Lambda_v_xi')
-        m_kappa_v = self.get_kappa_part(params, 'Kappa_v')
+        def get_sigma_x(params):
+            pass
 
-        m_a_xi = m_lambda_v_eta @ m_c @ m_gamma + m_lambda_v_xi
-        m_a_g = m_lambda_v_eta @ m_c @ m_pi + m_kappa_v
-        m_a_delta = m_lambda_v_eta @ m_c
+        def get_sigma_z(params):
+            m_beta = self.get_matrix(params, SEMmx.BETA)
+            m_gamma = self.get_matrix(params, SEMmx.GAMMA)
+            m_pi = self.get_matrix(params,  SEMmx.PI)
+            m_phi_xi = self.get_matrix(params, SEMmx.PHI_XI)
+            m_phi_y = self.get_matrix(params, SEMmx.PHI_Y)
+            m_theta_delta = self.get_matrix(params, SEMmx.THETA_DELTA)
+            m_theta_eps = self.get_matrix(params, SEMmx.THETA_EPS)
+            m_c = np.linalg.pinv(np.identity(m_beta.shape[0]) - m_beta)
 
-        m_sigma_v = m_a_xi @ m_phi_xi @ m_a_xi.T + \
-                    m_a_g @ m_phi_y @ m_a_g.T + \
-                    m_a_delta @ m_theta_delta @ m_a_delta.T + \
-                    m_theta_eps
+            m_lambda_v_eta = self.get_matrix(params, SEMmx.LAMBDA_V_ETA)
+            m_lambda_v_xi = self.get_matrix(params, SEMmx.LAMBDA_V_XI)
+            m_kappa_v = self.get_matrix(params, SEMmx.KAPPA_V)
 
-        return m_sigma_v
+            m_a_xi = m_lambda_v_eta @ m_c @ m_gamma + m_lambda_v_xi
+            m_a_g = m_lambda_v_eta @ m_c @ m_pi + m_kappa_v
+            m_a_delta = m_lambda_v_eta @ m_c
 
+            m_sigma_v = m_a_xi @ m_phi_xi @ m_a_xi.T + \
+                        m_a_g @ m_phi_y @ m_a_g.T + \
+                        m_a_delta @ m_theta_delta @ m_a_delta.T + \
+                        m_theta_eps
+
+            return m_sigma_v
+
+        if mx_name == SEMmx.SIGMA_ETA:
+            return get_sigma_eta(params)
+        elif mx_name == SEMmx.SIGMA_OMEGA:
+            return get_sigma_omega(params)
+        elif mx_name == SEMmx.SIGMA_Z:
+            return get_sigma_z(params)
+        else:
+            raise ValueError('Name of sigma-matrix is not correct')
 
     #
     # def update_all(self, params=None):
