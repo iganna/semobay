@@ -1,11 +1,13 @@
 import numpy as np
 from sem_percer import SEMParser
+from sem_model import SEMData
 from scipy.stats import linregress
 from pandas import read_csv
 from sys import stdout
 import itertools as it
 from enum import Enum
 import os
+from typing import Any, Iterable
 
 
 class SEMmx:
@@ -93,6 +95,10 @@ class SEMModelFull:
             self.set_mx_combined(SEMmx.MPART_COMB)
 
 
+        # Profiles of variables
+        self.d_v = []
+        self.d_u = []
+        self.d_v = []
 
 
     # # TODO
@@ -522,12 +528,16 @@ class SEMModelFull:
 
         return mx_kappa_parts
 
-    def get_matrix(self, params, mx_name):
+    def get_matrix(self, mx_name, params=None):
         """
         Get Beta matrix with parameters from params
+        :param mx_name:
         :param params:
         :return:
         """
+
+        if params is None:
+            params = self.param_val
 
         # If matrix should be calculated
         if mx_name in SEMmx.SIGMAS:
@@ -541,6 +551,9 @@ class SEMModelFull:
                 self.matrices[mx_type][pos2, pos1] = params[param_id]
 
         return self.matrices[mx_name]
+
+    def get_param_id(self, mx_name):
+        return []
 
     def get_sigma(self, params, mx_name):
 
@@ -598,153 +611,81 @@ class SEMModelFull:
         else:
             raise ValueError('Name of sigma-matrix is not correct')
 
-    #
-    # def update_all(self, params=None):
-    #     """
-    #     Set New parameters or Update matrixes from parameters
-    #     :param params:
-    #     :return:
-    #     """
-    #     # TODO LEN of parameters
-    #     if params is not None:
-    #         self.check_params(params)
-    #         # self.param_val = params
-    #     else:
-    #         params = self.param_val
-    #
-    #     # ANNA print('updated', params)
-    #     for i, position in self.param_pos.items():
-    #         mx_type, pos1, pos2 = position
-    #         if mx_type in {'Beta', 'Lambda'}:
-    #             self.matrices[mx_type][pos1, pos2] = params[i]
-    #         elif mx_type in {'Psi', 'Theta'}:  # Symmetric matrices
-    #             self.matrices[mx_type][pos1, pos2] = params[i]
-    #             self.matrices[mx_type][pos2, pos1] = params[i]
-    #
-    # def load_initial_dataset(self, data: SEMData):
-    #     """
-    #     Set Initial values into Matrices
-    #     :param data:
-    #     :return:
-    #     """
-    #
-    #     # TODO check whether the dataset and the model are in agreement
-    #
-    #     m_cov = data.m_cov
-    #     m_profiles = data.m_profiles
-    #     d_spart = self.d_vars['D_SPart']
-    #     d_mpart = self.d_vars['D_MPart']
-    #     v_spart = self.d_vars['SPart']
-    #     v_mpart = self.d_vars['MPart']
-    #     v_obsexo = self.d_vars['ObsExo']
-    #     v_lat = self.d_vars['Lat']
-    #     d_first_manif = self.d_vars['D_First_Manif']
-    #
-    #     # Matrix Beta - regression coefficients
-    #     for i, position in self.param_pos.items():
-    #         mx_type, pos1, pos2 = position
-    #         if mx_type != 'Beta':
-    #             continue
-    #
-    #         # if v_spart[pos1] in v_lat:
-    #         #     profile1 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos1]]]]
-    #         # else:
-    #         #     profile1 = m_profiles[:, d_mpart[v_spart[pos1]]]
-    #         #
-    #         # if v_spart[pos2] in v_lat:
-    #         #     profile2 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos2]]]]
-    #         # else:
-    #         #     profile2 = m_profiles[:, d_mpart[v_spart[pos2]]]
-    #
-    #         # lin_reg = linregress(profile2, profile1)
-    #         # self.param_val[i] = lin_reg.slope
-    #         self.param_val[i] = 0
-    #
-    #     # Matrix Lambda - regression coefficients
-    #     # first pos1 from MPart
-    #     # second pos2 - from SPart
-    #     for i, position in self.param_pos.items():
-    #         mx_type, pos1, pos2 = position
-    #         if mx_type != 'Lambda':
-    #             continue
-    #
-    #         # first - is measured
-    #         profile1 = m_profiles[:, pos1]
-    #         # second is always latent
-    #         profile2 = m_profiles[:, d_mpart[d_first_manif[v_spart[pos2]]]]
-    #
-    #         lin_reg = linregress(profile2, profile1)
-    #         self.param_val[i] = lin_reg.slope
-    #
-    #     # Matrix Psi - covariances from structural part not for latent variables
-    #     for i, position in self.param_pos.items():
-    #         mx_type, pos1, pos2 = position
-    #         if mx_type != 'Psi':
-    #             continue
-    #
-    #         if pos1 != pos2:
-    #             continue
-    #
-    #         if v_spart[pos1] in v_lat:
-    #             self.param_val[i] = 0.05
-    #             continue
-    #
-    #         # Translation from structural part into measurement
-    #         pos1 = pos2 = d_mpart[v_spart[pos1]]
-    #
-    #         # only diagonal variance
-    #         self.param_val[i] = m_cov[pos1][pos2] / 2
-    #
-    #
-    #
-    #     # Matrix Theta - covariances from measurement part
-    #     for i, position in self.param_pos.items():
-    #         mx_type, pos1, pos2 = position
-    #         if mx_type != 'Theta':
-    #             continue
-    #         self.param_val[i] = m_cov[pos1][pos2] / 2
-    #
-    #     # Psi matrix :  set fixed variances for exogenous observed variables
-    #     for v1, v2 in it.product(v_obsexo, repeat=2):  # all symmetric variants
-    #         pos1 = d_spart[v1]
-    #         pos2 = d_spart[v2]
-    #
-    #         # Translation from structural part into measurement
-    #         pos_cov1 = d_mpart[v1]
-    #         pos_cov2 = d_mpart[v2]
-    #
-    #         self.matrices['Psi'][pos1, pos2] = m_cov[pos_cov1, pos_cov2]
-    #
-    #     # DO NOT Update matrices
-    #
-    # def get_matrices(self, params=None, mx_type='All'):
-    #     """
-    #     Matrices are updated by default
-    #     :param params:
-    #     :return:
-    #     """
-    #     if params is not None:
-    #         self.check_params(params)
-    #
-    #     self.update_all(params)
-    #
-    #
-    #     # The returned matrices are updated
-    #     if mx_type is 'All':
-    #         return self.matrices
-    #     if mx_type in self.matrices.keys():
-    #         return self.matrices[mx_type]
-    #
-    # def get_bounds(self):
-    #     mx_to_fix = ['Theta', 'Psi']
-    #     bounds = []
-    #     for i, position in self.param_pos.items():
-    #         mx_type, pos1, pos2 = position
-    #         if mx_type in mx_to_fix:
-    #             bounds.append((0, None))
-    #         else:
-    #             bounds.append((None, None))
-    #     return bounds
+    # -------------------------------------------------------------------------
+    # Load dataset and initial values for parameters
+    # -------------------------------------------------------------------------
+
+    def load_dataset(self, data: SEMData):
+        """
+        Set Initial values into Matrices
+        :param data:
+        :return:
+        """
+
+        # TODO check whether the dataset and the model are in agreement
+
+
+        d_profiles = data.m_profiles
+        v_g = self.d_vars['v_g']
+
+        v_omega = self.d_vars['v_omega']
+
+        d_x = self.d_vars['d_x']
+        d_first_manif = self.d_vars['d_first_manif']
+
+        # All Path coefficients in Structural part are zero
+
+        # Matrix Lambda - regression coefficients
+        # first pos1 from MPart
+        # second pos2 - from SPart
+        for mx_type, pos1, pos2, param_id in self.param_pos:
+            if mx_type != SEMmx.LAMBDA:
+                continue
+
+            # first - is measured
+            profile1 = d_profiles[:, pos1]
+            # second is always latent
+            profile2 = d_profiles[:, d_x[d_first_manif[v_omega[pos2]]]]
+
+            lin_reg = linregress(profile2, profile1)
+            self.param_val[param_id] = lin_reg.slope
+
+        # Matrix Phi_xi starts from 0.05
+        for mx_type, pos1, pos2, param_id in self.param_pos:
+            if mx_type not in SEMmx.PHI_XI:
+                continue
+            if pos1 != pos2:
+                continue
+            self.param_val[param_id] = 0.05
+
+        # Matrix Phi_y starts from covariance matrix for g
+        for mx_type, pos1, pos2, param_id in self.param_pos:
+            if mx_type not in SEMmx.PHI_Y:
+                continue
+            if pos1 != pos2:
+                continue
+            self.param_val[param_id] = np.cov(d_profiles[:, v_g],
+                                              rowvar=False,
+                                              bias=True)
+
+        # Matrix Theta - covariances from measurement part
+        for mx_type, pos1, pos2, param_id in self.param_pos:
+            if mx_type not in {SEMmx.THETA_EPS, SEMmx.THETA_DELTA}:
+                continue
+            self.param_val[param_id] = 0.05
+
+        # -----------------------------------------------------
+        # Profiles as Additional Attributes
+        # -----------------------------------------------------
+        v_v = self.d_vars['v_v']
+        v_g = self.d_vars['v_g']
+        v_u = self.d_vars['v_u']
+        self.d_v = d_profiles[:, v_v].T
+        self.d_g = d_profiles[:, v_g].T
+        self.d_u = d_profiles[:, v_u].T
+
+
+
     #
     # def check_params(self, params):
     #     """
