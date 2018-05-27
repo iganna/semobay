@@ -1,0 +1,16 @@
+PC1 =~ FloCol + StemCol + LeafSize + FlowStemCol + NoPodsWeight + PodLength + PodWidth + SeedCol + Seed1000W 
+PC2 =~ PodsWeight + PodsNumber + SeedsNumber + SeedsWeight 
+PC3 =~ BegFEndF + EndFBegM 
+PC4 =~ Germ + BushShape + AscoRes + StemBr + Height + Hlp + SeedShape 
+PC5 =~ BegFEndF + StemBr + StemBr1ord + StemBr2ord 
+PC6 =~ BegMEndM + StemL1ord 
+PC7 =~ GBegF + BegMEndM + StemBr + PodD 
+PC8 =~ BegMEndM + StemL1ord + PodS + PodShape 
+PC1 ~ PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8
+PC2 ~ PC1 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8
+PC3 ~ PC1 + PC2 + PC4 + PC5 + PC6 + PC7 + PC8
+PC4 ~ PC1 + PC2 + PC3 + PC5 + PC6 + PC7 + PC8
+PC5 ~ PC1 + PC2 + PC3 + PC4 + PC6 + PC7 + PC8
+PC6 ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC7 + PC8
+PC7 ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC8
+PC8 ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7

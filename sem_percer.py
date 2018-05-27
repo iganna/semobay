@@ -40,6 +40,8 @@ class SEMParser:
                         d[rvalue[0]]
                         d[lvalue][op][rvalue[0]] += rvalue[1:]
 
-        d.pop('binary')
-        d.pop('ordinal')
+        if 'binary' in d.keys():
+            d.pop('binary')
+        if 'ordinal' in d.keys():
+            d.pop('ordinal')
         return d

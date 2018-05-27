@@ -2,10 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="455148aa-4016-4d6c-841b-6804d55e9d94" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/semopy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/semopy.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/mod_CD4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/mod_CD8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/mod_MON.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/regul_params.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/regul_params1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sem_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sem_model_full.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_model_full.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sem_opt_abc.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_opt_abc.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sem_opt_bfull.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_opt_bfull.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sem_opt_classic.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_opt_classic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sem_percer.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_percer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sem_regul.py" beforeDir="false" afterPath="$PROJECT_DIR$/sem_regul.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sem_stat.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_model_full.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_model_full.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,24 +26,29 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="sem_opt_bfull.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sem_opt_bfull.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sem_opt_bfull.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="297" lean-forward="true" selection-start-line="297" selection-end-line="297" />
+            <state relative-caret-position="203">
+              <caret line="120" column="24" selection-start-line="120" selection-start-column="24" selection-end-line="120" selection-end-column="24" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#4732#4878#0" />
-                <element signature="e#5143#5288#0" />
-                <element signature="e#5335#5480#0" />
-                <element signature="e#5564#5765#0" />
-                <element signature="e#5319#5468#0" />
-                <element signature="e#8087#8748#0" />
-                <element signature="e#8798#9811#0" />
-                <element signature="e#9850#12002#0" />
-                <element signature="e#12314#14307#0" />
               </folding>
             </state>
           </provider>
@@ -40,36 +57,23 @@
       <file leaf-file-name="sem_model_full.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sem_model_full.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="97" column="25" lean-forward="true" selection-start-line="97" selection-start-column="25" selection-end-line="97" selection-end-column="25" />
+            <state relative-caret-position="9731">
+              <caret line="780" column="27" selection-start-line="780" selection-start-column="27" selection-end-line="780" selection-end-column="27" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#7376#7954#0" />
-                <element signature="e#7989#8660#0" />
-                <element signature="e#8692#9331#0" />
-                <element signature="e#9367#10191#0" />
-                <element signature="e#10226#10807#0" />
-                <element signature="e#10848#11526#0" />
-                <element signature="e#11565#11900#0" />
-                <element signature="e#11936#12430#0" />
-                <element signature="e#12465#12833#0" />
-                <element signature="e#12884#13425#0" />
-                <element signature="e#13467#15585#0" />
-                <element signature="e#15626#16997#0" />
-                <element signature="e#17871#18452#0" />
-                <element signature="e#18503#18507#0" />
-                <element signature="e#18554#18558#0" />
-                <element signature="e#18605#19720#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_model_full.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_model_full.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test_model_full.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" selection-start-line="7" selection-end-line="10" selection-end-column="19" />
+            <state relative-caret-position="673">
+              <caret line="66" selection-start-line="66" selection-end-line="66" selection-end-column="39" />
+              <folding>
+                <element signature="e#0#46#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,36 +89,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>data</find>
-      <find>set</find>
-      <find>self.m_co</find>
-      <find>set_params</find>
-      <find>norm.logpdf</find>
+      <find>prof</find>
+      <find>update</find>
+      <find>mx_tmp = np.array(mx_lambda[rows, cols])</find>
+      <find>raise ValueError('Invalid Matrix Name')</find>
+      <find>self.set_mx_combined</find>
+      <find>set_mx_combined</find>
+      <find>concatenate</find>
+      <find>tod</find>
+      <find>Output</find>
+      <find>n_eta</find>
+      <find>d_vars</find>
+      <find>anna</find>
+      <find>, params</find>
+      <find>get_matrix</find>
       <find>print</find>
-      <find>ValueError: The truth value of an array with more than one element i</find>
-      <find>pass</find>
-      <find>tree</find>
-      <find>raise ValueError('None index returned')</find>
-      <find>prob_tree</find>
-      <find>calculate_sigma</find>
-      <find>inspect_mx</find>
-      <find>for v1, v2 in it.product(v_obsendo, repeat=2):</find>
+      <find>get_param_id</find>
+      <find>get_ord_value</find>
+      <find>d_z</find>
+      <find>get_coefs_spart</find>
+      <find>spart</find>
+      <find>p_theta_delta_alpha</find>
+      <find>theta_e</find>
+      <find>Theta_delta</find>
+      <find>gibbs_z</find>
+      <find>get_params_phi_y</find>
+      <find>p_phi_y_cov</find>
+      <find>p_spart_mean</find>
+      <find>pri</find>
+      <find>get_params_spart</find>
       <find>prin</find>
-      <find>get_params</find>
-      <find>SEMBranch</find>
-      <find>p.mx_type == opt_p.node_name.mx_type</find>
-      <find>return (0&lt;= param_branch &lt;= self.b_length) is True</find>
-      <find>prob_cov += self.log_edge(node_name, node_name2, dist, params_opt)</find>
-      <find>regularization</find>
-      <find>get_regul</find>
-      <find>'SPart'</find>
-      <find># Symbols in the model</find>
-      <find>SEMMatrices</find>
-      <find>psi</find>
-      <find>Psi</find>
-      <find>get_m</find>
-      <find>nda</find>
-      <find>n_spart</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -151,17 +155,18 @@
         <option value="$PROJECT_DIR$/test_phylo_bayes.py" />
         <option value="$PROJECT_DIR$/sem_opt_branch.py" />
         <option value="$PROJECT_DIR$/test_branches.py" />
-        <option value="$PROJECT_DIR$/sem_opt_classic.py" />
+        <option value="$PROJECT_DIR$/sem_mod_binary.py" />
+        <option value="$PROJECT_DIR$/sem_opt_bfull_m.py" />
+        <option value="$PROJECT_DIR$/sem_percer.py" />
+        <option value="$PROJECT_DIR$/sem_stats.py" />
         <option value="$PROJECT_DIR$/sem_opt_abc.py" />
         <option value="$PROJECT_DIR$/sem_regul.py" />
-        <option value="$PROJECT_DIR$/sem_mod_binary.py" />
+        <option value="$PROJECT_DIR$/sem_opt_classic.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/sem_percer.py" />
-        <option value="$PROJECT_DIR$/test_model_full.py" />
-        <option value="$PROJECT_DIR$/sem_opt_bfull_m.py" />
-        <option value="$PROJECT_DIR$/sem_model.py" />
         <option value="$PROJECT_DIR$/sem_model_full.py" />
+        <option value="$PROJECT_DIR$/sem_model.py" />
         <option value="$PROJECT_DIR$/sem_opt_bfull.py" />
+        <option value="$PROJECT_DIR$/test_model_full.py" />
       </list>
     </option>
   </component>
@@ -184,7 +189,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -196,6 +200,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -255,27 +260,27 @@
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" />
-      <window_info anchor="right" x="0" y="0" width="310" height="700" id="Documentation" sideWeight="0.50060606" side_tool="true" weight="0.3762518" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="right" x="0" y="0" width="310" height="700" id="Documentation" order="7" sideWeight="0.50545454" side_tool="true" weight="0.38340485" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.32889965" />
-      <window_info active="true" anchor="right" id="Python Console" order="4" sideWeight="0.49939394" visible="true" weight="0.3748212" />
+      <window_info active="true" anchor="right" x="421" y="37" width="598" height="825" id="Python Console" order="6" sideWeight="0.49454546" visible="true" weight="0.37267524" />
       <window_info anchor="bottom" id="Run" order="5" />
       <window_info anchor="bottom" id="Terminal" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13447782" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" />
-      <window_info anchor="right" id="SciView" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1416309" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="3" weight="0.3297568" />
+      <window_info anchor="right" id="SciView" order="4" weight="0.3297568" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="right" id="Commander" order="1" weight="0.4" />
-      <window_info anchor="right" id="Data View" order="0" />
-      <window_info anchor="bottom" id="Find" order="4" weight="0.32941177" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="right" id="Commander" order="1" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" id="Data View" order="0" />
       <window_info anchor="bottom" id="Message" order="3" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="4" weight="0.32941177" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -286,60 +291,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="34" />
+      <option name="time" value="36" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sem_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1815">
-          <caret line="309" column="47" selection-start-line="309" selection-start-column="47" selection-end-line="309" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sem_inspector.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="51" selection-start-line="7" selection-end-line="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sem_inspector.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="51" lean-forward="true" selection-start-line="7" selection-end-line="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="20" selection-end-line="47" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sem_opt_abc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4515">
-          <caret line="306" column="42" selection-start-line="306" selection-start-column="42" selection-end-line="306" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sem_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1815">
-          <caret line="309" column="47" selection-start-line="309" selection-start-column="47" selection-end-line="309" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEM.py" />
     <entry file="file://$PROJECT_DIR$/SEMInspector.py" />
     <entry file="file://$PROJECT_DIR$/SEMParser.py" />
     <entry file="file://$PROJECT_DIR$/SEMSPBackend.py" />
@@ -366,13 +321,7 @@
     <entry file="file://$PROJECT_DIR$/SEMSPBackend.py" />
     <entry file="file://$PROJECT_DIR$/SEM.py" />
     <entry file="file://$PROJECT_DIR$/semopy_ml_loss.py" />
-    <entry file="file://$PROJECT_DIR$/sem_stat.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="45" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/sem_stat.py" />
     <entry file="file://$PROJECT_DIR$/schiza/semopy_bayes.py" />
     <entry file="file://$PROJECT_DIR$/semopy_classical_opt.py" />
     <entry file="file://$PROJECT_DIR$/sem_opt_skewed.py">
@@ -418,25 +367,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sem_regul.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sem_mod_binary.py" />
     <entry file="file://$PROJECT_DIR$/sem_opt_bfull_m.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" selection-start-line="7" selection-end-line="11" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="41" column="39" selection-start-line="39" selection-end-line="41" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -447,89 +382,153 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/sem_opt_classic_old.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="17" lean-forward="true" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sem_opt_abc_old.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="74" column="8" lean-forward="true" selection-start-line="74" selection-start-column="8" selection-end-line="74" selection-end-column="75" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sem_percer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="21" />
+        <state relative-caret-position="241">
+          <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sem_stats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1786">
+          <caret line="130" column="18" selection-start-line="130" selection-start-column="18" selection-end-line="130" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/tmp_2/lib/python3.6/site-packages/numpy/lib/function_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="74529">
+          <caret line="5113" column="24" selection-start-line="5113" selection-start-column="24" selection-end-line="5113" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sem_regul.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1215">
+          <caret line="81" column="26" lean-forward="true" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sem_opt_classic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="51" selection-start-line="51" selection-end-line="56" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sem_opt_bayes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" selection-end-column="17" />
+        <state relative-caret-position="519">
+          <caret line="196" column="8" selection-start-line="196" selection-start-column="8" selection-end-line="196" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sem_opt_abc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+        <state relative-caret-position="2252">
+          <caret line="221" column="21" selection-start-line="221" selection-start-column="21" selection-end-line="221" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#4301#6889#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/tmp_2/lib/python3.6/site-packages/scipy/stats/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sem_opt_bayes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="458">
+          <caret line="69" column="12" lean-forward="true" selection-start-line="69" selection-start-column="12" selection-end-line="69" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/tmp_2/lib/python3.6/site-packages/scipy/linalg/decomp_cholesky.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="186" selection-start-line="186" selection-end-line="186" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/tmp_2/lib/python3.6/site-packages/scipy/stats/_multivariate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="650" selection-start-line="650" selection-end-line="650" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/tmp_2/lib/python3.6/site-packages/IPython/core/interactiveshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="2909" selection-start-line="2909" selection-end-line="2909" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="49" column="48" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#384#456#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sem_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="33" column="69" lean-forward="true" selection-start-line="33" selection-start-column="21" selection-end-line="33" selection-end-column="69" />
+        <state relative-caret-position="235">
+          <caret line="315" column="33" selection-start-line="315" selection-start-column="33" selection-end-line="315" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sem_model_full.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="97" column="25" lean-forward="true" selection-start-line="97" selection-start-column="25" selection-end-line="97" selection-end-column="25" />
+        <state relative-caret-position="9731">
+          <caret line="780" column="27" selection-start-line="780" selection-start-column="27" selection-end-line="780" selection-end-column="27" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#7376#7954#0" />
-            <element signature="e#7989#8660#0" />
-            <element signature="e#8692#9331#0" />
-            <element signature="e#9367#10191#0" />
-            <element signature="e#10226#10807#0" />
-            <element signature="e#10848#11526#0" />
-            <element signature="e#11565#11900#0" />
-            <element signature="e#11936#12430#0" />
-            <element signature="e#12465#12833#0" />
-            <element signature="e#12884#13425#0" />
-            <element signature="e#13467#15585#0" />
-            <element signature="e#15626#16997#0" />
-            <element signature="e#17871#18452#0" />
-            <element signature="e#18503#18507#0" />
-            <element signature="e#18554#18558#0" />
-            <element signature="e#18605#19720#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sem_opt_bfull.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="120" column="24" selection-start-line="120" selection-start-column="24" selection-end-line="120" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test_model_full.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="10" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sem_opt_bfull.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="297" lean-forward="true" selection-start-line="297" selection-end-line="297" />
+        <state relative-caret-position="673">
+          <caret line="66" selection-start-line="66" selection-end-line="66" selection-end-column="39" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#4732#4878#0" />
-            <element signature="e#5143#5288#0" />
-            <element signature="e#5335#5480#0" />
-            <element signature="e#5564#5765#0" />
-            <element signature="e#5319#5468#0" />
-            <element signature="e#8087#8748#0" />
-            <element signature="e#8798#9811#0" />
-            <element signature="e#9850#12002#0" />
-            <element signature="e#12314#14307#0" />
+            <element signature="e#0#46#0" expanded="true" />
           </folding>
         </state>
       </provider>

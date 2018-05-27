@@ -18,9 +18,6 @@ class SEMData:
         :return:
         """
 
-
-        if not isinstance(sem, SEMModel):
-            raise ValueError('Invalid model')
         # TODO assert for file existence
 
         self.name = os.path.basename(file_name[:-4])
@@ -79,7 +76,7 @@ class SEMData:
 
 class SEMModel:
 
-    def __init__(self, file_model):
+    def __init__(self, file_model, diag_psi=False):
 
         # TODO assert
         model_descr = None
@@ -99,6 +96,7 @@ class SEMModel:
         self.d_vars = self.classify_vars(self.model, self.sem_op)
 
         # Set matrices and parameters
+        self.diag_psi = diag_psi
         self.n_param = 0
         self.param_pos = {}
         self.param_val = []  # initial values of parameters
@@ -146,7 +144,7 @@ class SEMModel:
         vars_exo = (vars_lat | vars_obs) - vars_endo
 
         vars_upstream = {}
-        for v in vars_all :
+        for v in vars_all:
             if model[v][sem_op.REGRESSION]:
                 vars_upstream |= model[v][sem_op.REGRESSION].keys()
         vars_output = vars_endo - vars_upstream
@@ -156,7 +154,7 @@ class SEMModel:
         acc['ObsExo'] = sorted(list(vars_obs & vars_exo))
         acc['ObsEndo'] = sorted(list(vars_obs & vars_endo))
         acc['Manifest'] = sorted(list(vars_menif))
-        acc['Output'] = list(vars_output)
+        acc['Output'] = list(vars_output - set(acc['Manifest']))
 
         # DO NOT SORT AGAIN
         acc['Lat'] = acc['LatExo'] + acc['LatEndo']
@@ -314,6 +312,9 @@ class SEMModel:
         v_obs_endo = self.d_vars['ObsEndo']
         for v in v_obs_endo:
             self.add_parameter('Psi', d_spart[v], d_spart[v])
+
+        if self.diag_psi is True:
+            return m_psi
 
         # Define parameters of covariances within a group of Exogenous Latent Variables
         v_exo_lat = self.d_vars['LatExo']
