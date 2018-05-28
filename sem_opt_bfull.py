@@ -61,10 +61,6 @@ class SEMOptBayesFull():
         self.z_counts = self.get_z_counts()
 
 
-
-
-
-
         # -------------------------------------------
         # Parameters for prior distributions
         # -------------------------------------------
@@ -606,7 +602,11 @@ class SEMOptBayesFull():
         for i in range(self.n_obs):
             y_tmp = \
                 st.multivariate_normal.rvs(mean=np.zeros(self.n_g),
-                                       cov=m_phi_y)
+                                           cov=m_phi_y)
+
+            if not isinstance(y_tmp, collections.Iterable):
+                y_tmp = [y_tmp]
+
             y_new = [y if (g == 1) == (y > 0) else 0
                      for y, g in zip(y_tmp, self.d_g[i, :])]
             d_y[i, :] = y_new
@@ -618,7 +618,9 @@ class SEMOptBayesFull():
         result: new sample Omega"""
         d_omega = np.zeros((self.n_obs, self.n_omega))
         if self.n_omega == 0:
-            return d_omega
+            d_eta = d_omega[:, 0:self.n_eta]
+            d_xi = d_omega[:, self.n_eta:]
+            return d_eta, d_xi
 
         # ANNA
         # m_inv_sigma_x = np.linalg.pinv(self.get_matrix(SEMmx.SIGMA_X,
@@ -684,8 +686,9 @@ class SEMOptBayesFull():
             value_of_theta = st.invgamma.rvs(a=p_alpha,
                                              scale=p_beta)
             value_of_coef = \
-                list(st.multivariate_normal.rvs(mean=a_mean,
-                                           cov=a_cov*value_of_theta))
+                st.multivariate_normal.rvs(mean=a_mean,
+                                           cov=a_cov*value_of_theta)
+
             if not isinstance(value_of_coef, collections.Iterable):
                 value_of_coef = [value_of_coef]
 

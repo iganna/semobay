@@ -20,8 +20,8 @@ class SEMmx:
     PHI_Y = 'Phi_y'
     THETA_DELTA = 'Theta_delta'
     THETA_EPS = 'Theta_eps'
-    THETA_EPS_V = 'Theta_eps_u'
-    THETA_EPS_U = 'Theta_eps_v'
+    THETA_EPS_V = 'Theta_eps_v'
+    THETA_EPS_U = 'Theta_eps_u'
     THETA_EPS_PARTS = [THETA_EPS_V, THETA_EPS_U]
     LAMBDA_U_ETA = 'Lambda_u_eta'
     LAMBDA_U_XI = 'Lambda_u_xi'
@@ -392,7 +392,7 @@ class SEMModelFull:
 
                 if v1 is d_fisrt_manif[v2]:  # for the first - set 1
                     m_lambda[d_x[v1], d_omega[v2]] = 1
-                    # self.add_param_fixed(self.n_param - 1, 1)
+                    self.add_param_fixed(self.n_param - 1, 1)
 
         return m_lambda
 

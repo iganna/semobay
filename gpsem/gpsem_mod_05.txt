@@ -1,4 +1,4 @@
-eta_2 =~ u3  + u5
-eta_2 ~ g3 + g2
-g2 : binary
+eta_2 =~ u3
+# Genetic influence
+eta_2 ~ g3
 g3 : binary

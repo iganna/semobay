@@ -12,7 +12,7 @@ import scipy.stats as st
 
 path_model = 'gpsem/'
 file_model = 'gpsem_mod.txt'
-file_model = 'gpsem_mod_03.txt'
+file_model = 'gpsem_mod_04.txt'
 file_data = 'gpsem_test01.txt'
 
 
@@ -33,9 +33,16 @@ mod.load_dataset(data)
 param_prior = [3.4, 2.6, 3.0, 1., 0.1, 0.3, 15, 0.72, 1.69, 0.24,
                0.25, 0.25, 0.25]
 
-param_prior = [1.3, 2.6, 3.0, 1., 0.3, 15, 0.72, 1.69, 0.24,
+# mod_04
+param_prior = [1.3, 2.6, 3.0, 1., 0.3, 15, 3.5, 0.74,
                0.25, 0.25, 0.25]
+# # mod_05
+# param_prior = [3.3, 1, 18.4, 1, 0.25]
 
+# # mod_06
+# param_prior = [1.4, 3.7, 0.25]
+
+# mod.add_param_fixed(4, 0.25)
 
 # mod.add_param_fixed(0, 3.4)
 # mod.add_param_fixed(1, 2.6)
@@ -59,7 +66,7 @@ opt = SEMOptBayesFull(mod, data, param_prior)
 
 
 mcmc = opt.optimise()
-np.round(np.mean(mcmc, axis=0) * 10000) / 10000
+np.round(np.median(opt.mcmc, axis=0) * 10000) / 10000
 
 
 
