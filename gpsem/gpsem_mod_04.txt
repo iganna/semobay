@@ -1,0 +1,6 @@
+eta_2 =~ u3  + u5
+u5 ~ g7
+eta_2 ~ g3 + g2
+g2 : binary
+g3 : binary
+g7 : binary

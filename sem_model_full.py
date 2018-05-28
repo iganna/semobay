@@ -392,7 +392,7 @@ class SEMModelFull:
 
                 if v1 is d_fisrt_manif[v2]:  # for the first - set 1
                     m_lambda[d_x[v1], d_omega[v2]] = 1
-                    self.add_param_fixed(self.n_param - 1, 1)
+                    # self.add_param_fixed(self.n_param - 1, 1)
 
         return m_lambda
 
@@ -779,7 +779,7 @@ class SEMModelFull:
             return m_sigma_v
 
         def get_sigma_z_new(params):
-            return self.get_matrix(SEMmx.THETA_EPS, params)
+            return self.get_matrix(SEMmx.THETA_EPS_V, params)
 
         if mx_name == SEMmx.SIGMA_ETA:
             return get_sigma_eta(params)

@@ -16,7 +16,7 @@ file_model = 'gpsem_mod_03.txt'
 file_data = 'gpsem_test01.txt'
 
 
-#
+
 # mod_classic = SEMModel(path_model + file_model, )
 # data_classic = SEMData(mod_classic, path_model + file_data)
 # mod_classic.load_initial_dataset(data_classic)
@@ -30,8 +30,22 @@ mod = SEMModelFull(path_model + file_model)
 data = SEMDataFull(mod, path_model + file_data)
 mod.load_dataset(data)
 
-param_prior = [3.4, 2.6, 3.0, 1, 0.36, 0.1, 15, 0.72, 1.69, 0.24,
+param_prior = [3.4, 2.6, 3.0, 1., 0.1, 0.3, 15, 0.72, 1.69, 0.24,
                0.25, 0.25, 0.25]
+
+param_prior = [1.3, 2.6, 3.0, 1., 0.3, 15, 0.72, 1.69, 0.24,
+               0.25, 0.25, 0.25]
+
+
+# mod.add_param_fixed(0, 3.4)
+# mod.add_param_fixed(1, 2.6)
+# mod.add_param_fixed(2, 3.0)
+# mod.add_param_fixed(3, 1.)
+# mod.add_param_fixed(4, 0.36)
+# mod.add_param_fixed(5, 0.1)
+# mod.add_param_fixed(10, 0.25)
+# mod.add_param_fixed(11, 0.25)
+# mod.add_param_fixed(12, 0.25)
 opt = SEMOptBayesFull(mod, data, param_prior)
 # self = opt
 
@@ -45,7 +59,11 @@ opt = SEMOptBayesFull(mod, data, param_prior)
 
 
 mcmc = opt.optimise()
-np.savetxt(path_model + 'mcmc3_4.txt', mcmc)
+np.round(np.mean(mcmc, axis=0) * 10000) / 10000
+
+
+
+np.savetxt(path_model + 'mcmc3_11.txt', opt.mcmc)
 
 
 opt.get_matrix(SEMmx.BETA, opt.param_val)
@@ -54,14 +72,7 @@ opt.get_matrix(SEMmx.PI, opt.param_val)
 opt.get_matrix(SEMmx.LAMBDA, opt.param_val)
 
 
-#
-# x = opt.get_matrix(SEMmx.MPART, [p+1 for p in opt.param_val])
-#
-# np.savetxt(path_model + 'tmp.txt', x)
-#
-#
-# opt.get_matrix(SEMmx.KAPPA, [p+1 for p in opt.param_val])
-
-
 
 list(zip(opt.param_val, opt.param_pos))
+
+np.mean(opt.mcmc, axis=0)

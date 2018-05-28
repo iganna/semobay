@@ -31,7 +31,9 @@ class SEMOptBayesFull():
 
         # -------------------------------------------
         self.get_matrix = mod.get_matrix
-
+        self.d_xi = np.zeros((self.n_obs, self.n_xi))
+        self.d_eta = np.zeros((self.n_obs, self.n_eta))
+        self.d_y = np.zeros((self.n_obs, self.n_g))
 
 
         # -------------------------------------------
@@ -44,6 +46,8 @@ class SEMOptBayesFull():
         self.param_fix = mod.param_fix
         self.param_prior = None
         self.load_prior_params(param_prior)
+
+        self.mcmc = [np.array(self.param_val)]
 
 
         # -------------------------------------------
@@ -116,9 +120,10 @@ class SEMOptBayesFull():
     def optimise(self):
 
         params = np.array(self.param_val)
-        mcmc = [np.array(params)]
 
-        for _ in range(4000):
+        n_iter = 5000
+        print(n_iter)
+        for _ in range(n_iter):
 
             # --------------------------------------------------------
             # Initial values for z-boundaries
@@ -155,10 +160,10 @@ class SEMOptBayesFull():
             # Remember values of parameters after each iteration
             # --------------------------------------------------------
 
-            mcmc = np.append(mcmc, [self.param_val], axis=0)
-            print(mcmc.shape)
+            self.mcmc = np.append(self.mcmc, [self.param_val], axis=0)
+            print(self.mcmc.shape)
 
-        return mcmc
+        return self.mcmc
 
     def load_prior_params(self, param_prior):
         self.param_prior = param_prior
@@ -179,7 +184,7 @@ class SEMOptBayesFull():
                                 SEMmx.GAMMA}])
         pho = r + 4
 
-        m_r_inv = m_phi / (pho - self.n_g - 1)
+        m_r_inv = m_phi * (pho - self.n_xi - 1)
         return pho, m_r_inv
 
 
@@ -197,7 +202,7 @@ class SEMOptBayesFull():
                  if mx_type in {SEMmx.PI, SEMmx.KAPPA}])
         pho = r + 4
 
-        m_r_inv = m_phi / (pho - self.n_g - 1)
+        m_r_inv = m_phi * (pho - self.n_g - 1)
         return pho, m_r_inv
 
     def get_params_theta_delta(self):
@@ -210,7 +215,7 @@ class SEMOptBayesFull():
 
         m_theta = np.diag(self.get_matrix(SEMmx.THETA_DELTA, self.param_prior))
         alpha = np.ones(self.n_eta) * 3
-        beta = (alpha - 1) / m_theta
+        beta = (alpha - 1) * m_theta
         return alpha, beta
 
 
@@ -224,7 +229,7 @@ class SEMOptBayesFull():
 
         m_theta = np.diag(self.get_matrix(SEMmx.THETA_EPS, self.param_prior))
         alpha = np.ones(self.n_x) * 3
-        beta = (alpha - 1) / m_theta
+        beta = (alpha - 1) * m_theta
         return alpha, beta
 
 
@@ -384,11 +389,11 @@ class SEMOptBayesFull():
             return
         # Posterior parameters
         # new p_phi_xi_df
-        p_xi_cov_port = np.linalg.pinv(self.p_phi_xi_cov_inv + d_xi.T @ d_xi)
+        p_xi_cov_post = self.p_phi_xi_cov_inv + d_xi.T @ d_xi
         # new p_phi_xi_df
         p_xi_df_post = self.p_phi_xi_df + n_samples
 
-        m_phi_xi = st.invwishart.rvs(scale=p_xi_cov_port, df=p_xi_df_post)
+        m_phi_xi = st.invwishart.rvs(scale=p_xi_cov_post, df=p_xi_df_post)
 
         if not isinstance(m_phi_xi, collections.Iterable):
             m_phi_xi = [[m_phi_xi]]
@@ -413,11 +418,11 @@ class SEMOptBayesFull():
 
         # Posterior parameters
         # new p_phi_y_df
-        p_y_cov_port = np.linalg.pinv(self.p_phi_y_cov_inv + d_y.T @ d_y)
+        p_y_cov_post = self.p_phi_y_cov_inv + d_y.T @ d_y
         # new p_phi_y_df
         p_y_df_post = self.p_phi_y_df + n_samples
 
-        m_phi_y = st.invwishart.rvs(scale=p_y_cov_port, df=p_y_df_post)
+        m_phi_y = st.invwishart.rvs(scale=p_y_cov_post, df=p_y_df_post)
 
         if not isinstance(m_phi_y, collections.Iterable):
             m_phi_y = [[m_phi_y]]
@@ -475,6 +480,66 @@ class SEMOptBayesFull():
                 d_z[i, j] = 0
 
         return d_z
+
+    # def gibbs_z_new(self):
+    #     """
+    #     Gibbs sampling of Z variables
+    #     :param params:
+    #     :return:
+    #     """
+    #     def get_ord_value(value, bounds):
+    #         for category, bound in enumerate(reversed(bounds)):
+    #             if value < bound:
+    #                 return category
+    #
+    #     d_z = np.zeros((self.n_obs, self.n_z))
+    #     if self.n_z == 0:
+    #         return d_z
+    #
+    #     m_sigma_z = self.get_matrix(SEMmx.SIGMA_Z, self.param_val)
+    #     m_lambda_v = \
+    #         np.concatenate((self.get_matrix(SEMmx.LAMBDA_V_ETA, self.param_val),
+    #                         self.get_matrix(SEMmx.LAMBDA_V_XI, self.param_val)),
+    #                        axis=1)
+    #     m_kappa_v = self.get_matrix(SEMmx.KAPPA_V, self.param_val)
+    #     d_omega = self.d_omega
+    #     d_y = self.d_y
+    #
+    #     for i, j in it.product(range(self.n_obs), range(self.n_z)):
+    #
+    #
+    #         z_mean = m_lambda_v[j, :] @ d_omega[i, :].T + \
+    #                  m_kappa_v[j, :] @ d_y[i, :].T
+    #         z_cov = m_sigma_z[j][j]
+    #
+    #
+    #         z_tmp = \
+    #             st.multivariate_normal.rvs(mean=z_mean,
+    #                                        cov=z_cov,
+    #                                        size=1)
+    #         # z_tmp.sort()
+    #         #
+    #         # # define the order
+    #         # tmp_sample = self.d_v[:, i] + np.random.rand(self.n_obs)/100
+    #         # tmp_dict = {x: ind for ind, x in enumerate(sorted(tmp_sample))}
+    #         # idx = [tmp_dict[val] for val in tmp_sample]
+    #         # d_z[:, i] = [z_tmp[j] for j in idx]
+    #
+    #         d_z[i, j] = z_tmp
+    #
+    #
+    #     # Chack for correct class
+    #     for i, j in it.product(range(self.n_obs), range(self.n_z)):
+    #
+    #         value_norm = d_z[i, j]
+    #         value_smpl_ord = get_ord_value(value_norm, self.z_bounds[j])
+    #         value_ord = self.d_v[i, j]
+    #
+    #         if value_smpl_ord != value_ord:
+    #             d_z[i, j] = 0
+    #
+    #     return d_z
+
 
     def gibbs_z_new(self):
         """
@@ -555,16 +620,19 @@ class SEMOptBayesFull():
         if self.n_omega == 0:
             return d_omega
 
-        m_inv_sigma_x = np.linalg.pinv(self.get_matrix(SEMmx.SIGMA_X,
+        # ANNA
+        # m_inv_sigma_x = np.linalg.pinv(self.get_matrix(SEMmx.SIGMA_X,
+        #                                                self.param_val))
+
+        m_inv_sigma_x = np.linalg.pinv(self.get_matrix(SEMmx.THETA_EPS,
                                                        self.param_val))
+
         m_inv_sigma_omega = np.linalg.pinv(self.get_matrix(SEMmx.SIGMA_OMEGA,
                                                            self.param_val))
         m_lambda = self.get_matrix(SEMmx.LAMBDA, self.param_val)
         m_kappa = self.get_matrix(SEMmx.KAPPA, self.param_val)
         m_inv_q = m_lambda.T @ m_inv_sigma_x @ m_lambda + m_inv_sigma_omega
         m_q = np.linalg.pinv(m_inv_q)
-
-        # X  матрица, столбцы X - элементы выборки
 
         for i in range(self.n_obs):
             x = self.d_x[i, :]  # Do not need to transpose
@@ -617,7 +685,7 @@ class SEMOptBayesFull():
                                              scale=p_beta)
             value_of_coef = \
                 list(st.multivariate_normal.rvs(mean=a_mean,
-                                           cov=value_of_theta*a_cov))
+                                           cov=a_cov*value_of_theta))
             if not isinstance(value_of_coef, collections.Iterable):
                 value_of_coef = [value_of_coef]
 
@@ -641,6 +709,7 @@ class SEMOptBayesFull():
         n_obs = self.n_obs
         d_mpart = self.d_mpart
         d_x = self.d_x
+        irow = 0
 
         # Sampling Theta_eps and (Lambda, Kappa) by rows
         for irow in range(self.n_x):
@@ -656,15 +725,15 @@ class SEMOptBayesFull():
             # Calculate new parameters of InvGamma dna InvWishart
             p_alpha = self.p_theta_eps_alpha[irow] + n_obs / 2
             p_beta = self.p_theta_eps_beta[irow] + 1 / 2 * \
-                     (d_x[:, irow].T @ d_x[:, irow]
-                      - a_mean.T @ a_cov_inv @ a_mean +
+                     (d_x[:, irow].T @ d_x[:, irow] -
+                      a_mean.T @ a_cov_inv @ a_mean +
                       self.p_mpart_qform[irow])
 
             value_of_theta = st.invgamma.rvs(a=p_alpha,
                                             scale=p_beta)
             value_of_coef = \
                 st.multivariate_normal.rvs(mean=a_mean,
-                                           cov=value_of_theta*a_cov,
+                                           cov=a_cov*value_of_theta,
                                            size=1)
 
             if not isinstance(value_of_coef, collections.Iterable):
