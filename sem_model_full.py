@@ -86,6 +86,10 @@ class SEMDataFull:
         if 'Unnamed: 0' in list(data):
             data = read_csv(file_name, sep=sep, index_col=0)
 
+        x = list(data.columns.values)
+        y = sem.d_vars['observed']
+        print(len(x))
+        print(list(set(y) - set(x)))
         try:
             data = (data[sem.d_vars['observed']]).as_matrix()
         except:
@@ -139,6 +143,7 @@ class SEMModelFull:
         self.param_pos = []
         self.param_val = []  # initial values of parameters
         self.param_fix = []
+        self.param_variables = []
 
         self.matrices = dict()
 
@@ -195,6 +200,7 @@ class SEMModelFull:
 
         vars_all = {v for v in model}
 
+
         # Latent variables
         vars_lat = {v for v in vars_all if model[v][sem_op.MEASUREMENT]}
         # Manifest variables
@@ -240,6 +246,7 @@ class SEMModelFull:
         acc['Lat'] = acc['LatExo'] + acc['LatEndo']
         acc['FirstManif'] = {latent:[*model[latent][sem_op.MEASUREMENT]][0] for latent in acc['Lat']}
         acc['Manif'] = acc['ObsNorm'] + acc['ObsOrd']
+
 
         acc['observed'] = acc['ObsNorm'] + acc['ObsBin'] + acc['ObsOrd']
         acc['d_observed'] = {v: i for i, v in enumerate(acc['observed'])}
@@ -292,6 +299,18 @@ class SEMModelFull:
 
         self.param_pos += [(param_type, pos1, pos2, param_id)]
 
+
+    def add_varvar(self, param_type, v1, v2, param_id = None):
+        """
+        Add new parameters
+        :param param_type:
+        :param pos1:
+        :param pos2:
+        :return:
+        """
+
+        self.param_variables += [(param_type, v1, v2, param_id)]
+
     def add_param_fixed(self, param_id, value):
         """
         Add new parameters
@@ -320,7 +339,8 @@ class SEMModelFull:
 
         for v1, v2 in it.permutations(v_eta, 2):
             if v2 in self.model[v1][self.sem_op.REGRESSION]:
-                self.add_parameter('Beta', d_eta[v1], d_eta[v2])
+                self.add_varvar(SEMmx.BETA, v1, v2, self.n_param)
+                self.add_parameter(SEMmx.BETA, d_eta[v1], d_eta[v2])
         return m_beta
 
     def set_gamma(self):
@@ -343,7 +363,8 @@ class SEMModelFull:
 
         for v1, v2 in it.product(v_eta, v_xi):
             if v2 in self.model[v1][self.sem_op.REGRESSION]:
-                self.add_parameter('Gamma', d_eta[v1], d_xi[v2])
+                self.add_varvar(SEMmx.GAMMA, v1, v2, self.n_param)
+                self.add_parameter(SEMmx.GAMMA, d_eta[v1], d_xi[v2])
         return m_gamma
 
     def set_pi(self):
@@ -365,7 +386,8 @@ class SEMModelFull:
 
         for v1, v2 in it.product(v_eta, v_g):
             if v2 in self.model[v1][self.sem_op.REGRESSION]:
-                self.add_parameter('Pi', d_eta[v1], d_g[v2])
+                self.add_varvar(SEMmx.PI, v1, v2, self.n_param)
+                self.add_parameter(SEMmx.PI, d_eta[v1], d_g[v2])
         return m_pi
 
     def set_lambda(self):
@@ -388,7 +410,9 @@ class SEMModelFull:
         # Define fixed_to-one parameters and parameters for estimation
         for v2 in v_omega:
             for v1 in self.model[v2][self.sem_op.MEASUREMENT]:
-                self.add_parameter('Lambda', d_x[v1], d_omega[v2])
+                self.add_varvar(SEMmx.LAMBDA, v1, v2, self.n_param)
+
+                self.add_parameter(SEMmx.LAMBDA, d_x[v1], d_omega[v2])
 
                 if v1 is d_fisrt_manif[v2]:  # for the first - set 1
                     m_lambda[d_x[v1], d_omega[v2]] = 1
@@ -414,7 +438,8 @@ class SEMModelFull:
 
         for v1, v2 in it.product(v_x, v_g):
             if v2 in self.model[v1][self.sem_op.REGRESSION]:
-                self.add_parameter('Kappa', d_x[v1], d_g[v2])
+                self.add_varvar(SEMmx.KAPPA, v1, v2, self.n_param)
+                self.add_parameter(SEMmx.KAPPA, d_x[v1], d_g[v2])
         return m_kappa
 
     def set_theta_delta(self):
@@ -432,7 +457,8 @@ class SEMModelFull:
 
         # Fill diagonal elements
         for v1 in v_eta:
-            self.add_parameter('Theta_delta', d_eta[v1], d_eta[v1])
+            self.add_varvar(SEMmx.THETA_DELTA, v1, v1, self.n_param)
+            self.add_parameter(SEMmx.THETA_DELTA, d_eta[v1], d_eta[v1])
 
         # v_output = self.d_vars['LatOutput']
         # # Fill covariances for output variables
@@ -453,7 +479,8 @@ class SEMModelFull:
         n_x = len(v_x)
         m_theta_eps = np.zeros((n_x, n_x))
         for v in v_x:
-            self.add_parameter('Theta_eps', d_x[v], d_x[v])
+            self.add_varvar(SEMmx.THETA_EPS, v, v, self.n_param)
+            self.add_parameter(SEMmx.THETA_EPS, d_x[v], d_x[v])
 
         return m_theta_eps
 
@@ -473,7 +500,8 @@ class SEMModelFull:
         m_phi_xi = np.zeros((n_xi, n_xi))
 
         for v1, v2 in it.combinations_with_replacement(v_xi, 2):
-            self.add_parameter('Phi_xi', d_xi[v1], d_xi[v2])
+            self.add_varvar(SEMmx.PHI_XI, v1, v2, self.n_param)
+            self.add_parameter(SEMmx.PHI_XI, d_xi[v1], d_xi[v2])
         return m_phi_xi
 
     def set_phi_y(self):
@@ -494,7 +522,8 @@ class SEMModelFull:
         #     self.add_parameter('Phi_y', d_g[v1], d_g[v2])
 
         for v in v_g:
-            self.add_parameter('Phi_y', d_g[v], d_g[v])
+            self.add_varvar(SEMmx.PHI_Y, v, v, self.n_param)
+            self.add_parameter(SEMmx.PHI_Y, d_g[v], d_g[v])
 
         return m_phi_xi
 

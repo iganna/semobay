@@ -1,0 +1,120 @@
+PC1 =~ FloCol + StemCol + LeafSize + FlowStemCol + NoPodsWeight + PodLength + PodWidth + SeedCol + Seed1000W
+PC2 =~ PodsWeight + PodsNumber + SeedsNumber + SeedsWeight
+PC4 =~ Germ + BushShape + AscoRes + StemBr + Height + Hlp + SeedShape
+PC5 =~ BegFEndF + StemBr + StemBr1ord + StemBr2ord + EndFBegM
+PC7 =~ GBegF + BegMEndM + StemBr + PodD
+PC8 =~ BegMEndM + StemL1ord + PodS + PodShape
+PC7 ~ PC2
+PC4 ~ PC8
+PC5 ~ PC1 + PC8
+PC1 ~ PC2 + PC8
+PC8 ~ PC2
+ PC1 ~ PC1SNP3 + PC1SNP4 + PC1SNP5
+ PC2 ~ PC2SNP1 
+ PC4 ~  PC4SNP1
+ PC5 ~ PC5SNP4
+ PC7 ~  PC7SNP5 
+ PC8 ~   PC8SNP3 + PC8SNP5 
+ Germ ~ GermSNP1 
+ GBegF ~ GBegFSNP1
+ BegFEndF ~   BegFEndFSNP4
+ EndFBegM ~  EndFBegMSNP1
+ BegMEndM ~ BegMEndMSNP1  + BegMEndMSNP5 
+ FloCol ~   FloColSNP2 + FloColSNP3  + FloColSNP5 
+ StemCol ~ StemColSNP1  
+ BushShape ~ BushShapeSNP2 + BushShapeSNP4 
+ LeafSize ~ LeafSizeSNP1   + LeafSizeSNP5 
+ FlowStemCol ~ FlowStemColSNP1 
+ AscoRes ~ AscoResSNP1 + AscoResSNP4 
+ StemBr ~ StemBrSNP1 
+ StemL1ord ~  StemL1ordSNP2 
+ StemBr1ord ~  StemBr1ordSNP2 + StemBr1ordSNP3  + StemBr1ordSNP5 
+ StemBr2ord ~ StemBr2ordSNP4 
+ PodD ~ PodDSNP3 + PodDSNP4 
+ PodS ~ PodSSNP2
+ Height ~  HeightSNP2
+ Hlp ~ HlpSNP1  + HlpSNP3   
+ NoPodsWeight ~ NoPodsWeightSNP1 + NoPodsWeightSNP2 
+ PodsWeight ~  PodsWeightSNP2
+ PodsNumber ~ PodsNumberSNP2 
+ SeedsNumber ~   SeedsNumberSNP3 + SeedsNumberSNP4
+ SeedsWeight ~ SeedsWeightSNP1  
+ PodShape ~  PodShapeSNP2 + PodShapeSNP4  
+ PodLength ~  PodLengthSNP2   
+ PodWidth ~ PodWidthSNP1 + PodWidthSNP2  
+ SeedShape ~  SeedShapeSNP3 + SeedShapeSNP4 + SeedShapeSNP5 
+ SeedCol ~ SeedColSNP2 + SeedColSNP3 
+ Seed1000W ~ Seed1000WSNP2 + Seed1000WSNP3 + Seed1000WSNP4 
+ Seed1000WSNP2 : binary
+Seed1000WSNP3 : binary
+Seed1000WSNP4 : binary
+SeedColSNP2 : binary
+SeedColSNP3 : binary
+SeedShapeSNP3 : binary
+SeedShapeSNP4 : binary
+SeedShapeSNP5 : binary
+PodWidthSNP1 : binary
+PodWidthSNP2 : binary
+PodLengthSNP2 : binary
+PodShapeSNP2 : binary
+PodShapeSNP4 : binary
+SeedsWeightSNP1 : binary
+SeedsNumberSNP3 : binary
+SeedsNumberSNP4 : binary
+PodsNumberSNP2 : binary
+PodsWeightSNP2 : binary
+NoPodsWeightSNP1 : binary
+NoPodsWeightSNP2 : binary
+HlpSNP1 : binary
+HlpSNP3 : binary
+HeightSNP2 : binary
+PodSSNP2 : binary
+PodDSNP3 : binary
+PodDSNP4 : binary
+StemBr2ordSNP4 : binary
+StemBr1ordSNP2 : binary
+StemBr1ordSNP3 : binary
+StemBr1ordSNP5 : binary
+StemL1ordSNP2 : binary
+StemBrSNP1 : binary
+AscoResSNP1 : binary
+AscoResSNP4 : binary
+FlowStemColSNP1 : binary
+LeafSizeSNP1 : binary
+LeafSizeSNP5 : binary
+BushShapeSNP2 : binary
+BushShapeSNP4 : binary
+StemColSNP1 : binary
+FloColSNP2 : binary
+FloColSNP3 : binary
+FloColSNP5 : binary
+BegMEndMSNP1 : binary
+BegMEndMSNP5 : binary
+EndFBegMSNP1 : binary
+BegFEndFSNP4 : binary
+GBegFSNP1 : binary
+GermSNP1 : binary
+PC1SNP3 : binary
+PC1SNP4 : binary
+PC1SNP5 : binary
+PC2SNP1 : binary
+PC4SNP1 : binary
+PC5SNP4 : binary
+PC7SNP5 : binary
+PC8SNP3 : binary
+PC8SNP5 : binary
+FloCol : ordinal
+StemCol : ordinal
+BushShape : ordinal
+LeafSize : ordinal
+FlowStemCol : ordinal
+AscoRes : ordinal
+StemBr : ordinal
+StemL1ord : ordinal
+StemBr1ord : ordinal
+StemBr2ord : ordinal
+PodD : ordinal
+PodS : ordinal
+PodShape : ordinal
+SeedShape : ordinal
+SeedCol : ordinal

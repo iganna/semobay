@@ -31,9 +31,9 @@ estimator = 'MLW'
 # file_data = 'example01.txt'
 
 
-path_model = 'genphen/'
-path_data = 'genphen/'
-path_res = 'genphen/'
+path_model = 'gpsem/'
+path_data = 'gpsem/'
+path_res = 'gpsem/'
 file_model = 'mod_genphen.txt'
 file_data = 'pca8.txt'
 file_data = 'phen.txt'
@@ -53,20 +53,20 @@ mod.load_initial_dataset(data)
 
 reg_alpha = 0
 
-# =========================================
-
-opt_classic = SEMOptClassic(mod, data, estimator, 'l2')
-
-opt_classic.optimize(alpha=reg_alpha)
-
-with open(path_res + file_model[:-4] + '_georg' + estimator +
-                  '_lambda' + str(reg_alpha) + '_best2.txt', 'w') as f:
-    inspect(mod, opt_classic, f)
-
-# print(opt_classic.loss_func(opt_classic, mod.param_val))
-print(opt_classic.loss_func(opt_classic, opt_classic.params))
-
-# =========================================
+# # =========================================
+#
+# opt_classic = SEMOptClassic(mod, data, estimator, 'l2')
+#
+# opt_classic.optimize(alpha=reg_alpha)
+#
+# with open(path_res + file_model[:-4] + '_georg' + estimator +
+#                   '_lambda' + str(reg_alpha) + '_best2.txt', 'w') as f:
+#     inspect(mod, opt_classic, f)
+#
+# # print(opt_classic.loss_func(opt_classic, mod.param_val))
+# print(opt_classic.loss_func(opt_classic, opt_classic.params))
+#
+# # =========================================
 
 
 
@@ -75,7 +75,6 @@ opt_classic = SEMOptClassic(mod, data, estimator, regularization='l2')
 opt_classic.optimize(alpha=10 ** (-10))
 opt_classic.fix_matrix({'Psi', 'Theta', 'Lambda'})
 params_init = np.array(opt_classic.params)
-print(params_init)
 
 # np.savetxt(path_res + 'params_init_x3.txt', opt_classic.params, '%.10f')
 
@@ -97,7 +96,6 @@ for reg_alpha in reg_range:
     # opt_classic = SEMOptClassic(mod, data, estimator, regularization='l2')
     opt_classic.optimize(alpha=reg_alpha)
     params_init = np.array(opt_classic.params)
-    print(params_init)
     pvals = gather_pvals(opt_classic, data)
 
     pvalth_thresh_set = [p for id, p in enumerate(pvals)
@@ -125,7 +123,6 @@ for reg_alpha in reg_range:
 
         mx = opt_classic.calculate_sigma(opt_classic.params)
         x = opt_classic.ml_norm_log_likelihood(mx, opt_classic.m_profiles)
-        print(x)
     else:
         lld += [0]
     regul_chain = np.append(regul_chain, [opt_classic.params], axis=0)

@@ -47,21 +47,29 @@ class SEMCrossVal:
             return [lst[int(round(division * i)):
                         int(round(division * (i + 1)))] for i in range(n)]
 
+
         self.n_cv = n_cv
         self.opts = [SEMOptClassic(mod, data, estimator, 'l2') for _ in range(
             self.n_cv)]
 
         self.m_profiles = data.m_profiles
-        groups = partition(self.m_profiles, self.n_cv)
+        self.groups = partition(self.m_profiles, self.n_cv)
         self.cv_prof = []
         self.cv_cov = []
-        for i, g in enumerate(groups):
-            self.cv_prof += [g]
+        for i, g in enumerate(self.groups):
+
             remain_prof = reduce(lambda x, y: np.concatenate((x, y), axis=0),
-                                 [gr for j, gr in enumerate(groups)
+                                 [gr for j, gr in enumerate(self.groups)
                                   if i != j])
             print(remain_prof.shape)
-            self.cv_cov += [np.cov(remain_prof, rowvar=False, bias=True)]
+
+            self.cv_prof += [remain_prof]
+            self.cv_cov += [np.cov(g, rowvar=False, bias=True)]
+
+
+            # self.cv_prof += [g]
+            # self.cv_cov += [np.cov(remain_prof, rowvar=False, bias=True)]
+
             self.opts[i].m_cov = self.cv_cov[i]
 
     def cv_likelihood(self, params=None):

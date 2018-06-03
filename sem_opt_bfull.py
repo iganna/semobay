@@ -96,6 +96,11 @@ class SEMOptBayesFull():
                               for mean, loc in zip(self.p_mpart_mean,
                                                    self.p_mpart_loc)]
 
+        # -----------------------------------------------
+        # order of Binary and Ordinal variables
+        # -----------------------------------------------
+        self.idx_z = None
+        self.idx_y = None
 
     @property
     def d_omega(self):
@@ -117,7 +122,7 @@ class SEMOptBayesFull():
 
         params = np.array(self.param_val)
 
-        n_iter = 5000
+        n_iter = 20000
         print(n_iter)
         for _ in range(n_iter):
 
@@ -558,10 +563,12 @@ class SEMOptBayesFull():
             z_tmp.sort()
 
             # define the order
+            # if self.idx_z is None:
             tmp_sample = self.d_v[:, i] + np.random.rand(self.n_obs)/100
             tmp_dict = {x: ind for ind, x in enumerate(sorted(tmp_sample))}
-            idx = [tmp_dict[val] for val in tmp_sample]
-            d_z[:, i] = [z_tmp[j] for j in idx]
+            self.idx_z = [tmp_dict[val] for val in tmp_sample]
+
+            d_z[:, i] = [z_tmp[j] for j in self.idx_z]
 
         return d_z
 
@@ -581,10 +588,12 @@ class SEMOptBayesFull():
             y_tmp.sort()
 
             # define the order
+            # if self.idx_y is None:
             tmp_sample = self.d_g[:, i] + np.random.rand(self.n_obs) / 100
             tmp_dict = {x: ind for ind, x in enumerate(sorted(tmp_sample))}
-            idx = [tmp_dict[val] for val in tmp_sample]
-            d_y[:, i] = [y_tmp[j] for j in idx]
+            self.idx_y = [tmp_dict[val] for val in tmp_sample]
+
+            d_y[:, i] = [y_tmp[j] for j in self.idx_y]
 
         return d_y
 
@@ -622,15 +631,24 @@ class SEMOptBayesFull():
             d_xi = d_omega[:, self.n_eta:]
             return d_eta, d_xi
 
-        # ANNA
-        # m_inv_sigma_x = np.linalg.pinv(self.get_matrix(SEMmx.SIGMA_X,
-        #                                                self.param_val))
 
+        # # MASHA
+        # m_tmp = self.get_matrix(SEMmx.THETA_EPS, self.param_val) + \
+        #         self.get_matrix(SEMmx.KAPPA, self.param_val) @ \
+        #         self.get_matrix(SEMmx.PHI_Y, self.param_val) @ \
+        #         self.get_matrix(SEMmx.KAPPA, self.param_val)
+        # m_inv_sigma_x = np.linalg.pinv(m_tmp)
+
+
+        # GOOD
         m_inv_sigma_x = np.linalg.pinv(self.get_matrix(SEMmx.THETA_EPS,
                                                        self.param_val))
 
         m_inv_sigma_omega = np.linalg.pinv(self.get_matrix(SEMmx.SIGMA_OMEGA,
                                                            self.param_val))
+
+
+
         m_lambda = self.get_matrix(SEMmx.LAMBDA, self.param_val)
         m_kappa = self.get_matrix(SEMmx.KAPPA, self.param_val)
         m_inv_q = m_lambda.T @ m_inv_sigma_x @ m_lambda + m_inv_sigma_omega
